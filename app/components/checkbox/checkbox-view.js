@@ -8,9 +8,9 @@ module.exports = React.createClass({
     var {name, handler} = this.props;
 
     return (
-      <div class="checkbox">
+      <div className="checkbox">
         <label>
-          <input type="checkbox" onChange={handler} value={this.state.value}/>{name}
+          <input type="checkbox" onChange={handler}/>{name}
         </label>
       </div>
     );

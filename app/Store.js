@@ -6,12 +6,14 @@ module.exports = flux.createStore({
   triggerChain: [],
   step: 0,
   sequence: [],
+  initNewSequence: '',
   isMSequence: false,
   actions: [
     actions.stepForward,
     actions.lastStep,
     actions.initChainConf,
-    actions.updateSequence
+    actions.updateSequence,
+    actions.initSequence
   ],
 
   initChainConf: function (chainConf) {
@@ -41,6 +43,14 @@ module.exports = flux.createStore({
     this.emitChange();
   },
 
+  initSequence: function () {
+    this.step = 0;
+    this.sequence = [];
+    this.isMSequence = false;
+    this.initNewSequence = _.uniqueId('sequence_');
+    this.emitChange();
+  },
+
   exports: {
     getChainConf: function () {
       return this.triggerChain;
@@ -56,6 +66,9 @@ module.exports = flux.createStore({
     },
     isMSequence: function () {
       return this.isMSequence
+    },
+    getUniqueId: function () {
+      return this.initNewSequence
     }
   }
 });

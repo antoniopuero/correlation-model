@@ -12,25 +12,31 @@ module.exports = React.createClass({
   displayName: 'TriggerChain',
 
   getInitialState: function () {
-    var {chain, maxStep} = this.props;
-    actions.initSequence(chain);
+    var {chainLength, maxStep} = this.props;
+    actions.changeLength(chainLength);
     return {
       step: Store.getStep(),
+      chainLength: Store.getLength(),
       triggerValues: Store.getTriggerValues(),
       maxStep: maxStep
     };
   },
 
   shouldComponentUpdate: function (nextProps, nextState) {
+    if (nextProps.newSequenceId !== this.props.newSequenceId) {
+      actions.initSequence();
+      return false;
+    }
+
     if (nextProps.step !== this.props.step) {
       if (nextProps.step === this.state.maxStep) {
         actions.returnSequence(this.state.maxStep);
       } else {
         actions.changeStep(nextProps.step);
       }
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   },
 
@@ -41,13 +47,15 @@ module.exports = React.createClass({
     Store.removeChangeListener(this.changeState);
   },
   changeState: function () {
-    console.log(Store.getSequence())
     appActions.updateSequence(Store.getSequence(), Store.isMSequence());
     this.setState({
       triggerValues: Store.getTriggerValues()
     });
   },
   renderTrigger: function (value, index) {
+    if (!value) {
+      value = 0;
+    }
     return (
         <TriggerEntity value={value} number={index + 1}/>
     );

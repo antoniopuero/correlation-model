@@ -4,5 +4,6 @@ module.exports = flux.createActions([
   'initChainConf',
   'stepForward',
   'lastStep',
-  'updateSequence'
+  'updateSequence',
+  'initSequence'
 ]);

@@ -7,7 +7,7 @@ var feedbackFunction = function (values) {
   });
 };
 
-module.exports = (function () {
+module.exports = function () {
   var triggers = [];
   var feedback;
 
@@ -16,7 +16,6 @@ module.exports = (function () {
       addTriggers(triggerEntity());
     }
     feedback = feedBackInit(triggerIndexes, feedbackFunction);
-    return this;
   };
 
   var addTriggers = function (newTriggers) {
@@ -111,4 +110,4 @@ module.exports = (function () {
     getChainLength: getChainLength,
     getChainSnapshot: getChainSnapshot
   }
-})();
+};
