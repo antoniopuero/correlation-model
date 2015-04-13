@@ -1,0 +1,31 @@
+.sequence-wrapper {
+  word-break: break-all;
+}
+.sequence-wrapper.m-sequence {
+  background: green;
+  color: #cccccc;
+}
+
+.trigger {
+  display: table-cell;
+  position: relative;
+  height: 90px;
+  border: 1px solid #ccc;
+  vertical-align: middle;
+}
+.trigger .value {
+  display: block;
+  font-size: 20px;
+  text-align: center;
+}
+.trigger .number {
+  position: absolute;
+  bottom: 8px;
+  right: 5px;
+}
+
+.trigger-chain {
+  display: table;
+  width: 100%;
+  border-spacing: 15px;
+}
