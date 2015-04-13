@@ -2,12 +2,19 @@
 var React = require('react');
 var Store = require('./Store.js');
 var actions = require('./actions.js');
-
-var App = React.createClass({
+var triggerChainConst = require('./constants/trigger-chains');
+var TriggerChain = require('./components/trigger-chain/trigger-chain-view');
+var Button = require('./components/button/button-view');
+var classNames = require('classnames');
+console.log(classNames)
+module.exports = React.createClass({
   getInitialState: function () {
+    var randomChain = triggerChainConst.getRandomChain();
+    actions.initChainConf(randomChain);
     return {
-      messages: Store.getMessages(),
-      newMessage: ''
+      triggerChain: Store.getChainConf(),
+      sequence: Store.getSequence(),
+      maxStep: Store.getMaxStep()
     };
   },
   componentWillMount: function () {
@@ -18,38 +25,32 @@ var App = React.createClass({
   },
   changeState: function () {
     this.setState({
-      messages: Store.getMessages()
+      step: Store.getStep(),
+      sequence: Store.getSequence(),
+      isMSequence: Store.isMSequence()
     });
   },
-  addMessage: function (event) {
-    event.preventDefault();
-    var input = this.refs.newMessage.getDOMNode();
-    actions.addMessage(input.value);
-    this.setState({
-      newMessage: ''
-    });
+  proceedChain: function () {
+    actions.stepForward();
   },
-  updateNewMessage: function (event) {
-    this.setState({
-      newMessage: event.target.value
-    });
+
+  getWholeSequence: function () {
+    actions.lastStep();
   },
-  renderMessages: function (message) {
+
+  render: function () {
+    var self = this;
+    var classes = classNames('sequence-wrapper', {
+      'm-sequence': self.state.isMSequence
+    });
     return (
-      <div>{message}</div>
-    );
-  },
-	render: function() {
-		return (
-			<div>
-        {this.state.messages.map(this.renderMessages)}
-        <form onSubmit={this.addMessage}>
-          <input ref="newMessage" type="text" value={this.state.newMessage} onChange={this.updateNewMessage}/>
-        </form>
+      <div className="container">
+        <TriggerChain chain={this.state.triggerChain} step={this.state.step} maxStep={this.state.maxStep}/>
+        <div className={classes}>{this.state.sequence.join('')}</div>
+        <Button name="One step" handler={this.proceedChain}/>
+        <Button name="Whole sequence" handler={this.getWholeSequence}/>
       </div>
-		);
-	}
-	
+    );
+  }
+
 });
-	
-module.exports = App;

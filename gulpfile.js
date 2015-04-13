@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var source = require('vinyl-source-stream'); // Used to stream bundle for further handling
 var browserify = require('browserify');
+var es6ify = require('es6ify');
 var watchify = require('watchify');
 var reactify = require('reactify'); 
 var gulpif = require('gulp-if');
@@ -14,6 +15,7 @@ var shell = require('gulp-shell');
 var glob = require('glob');
 var livereload = require('gulp-livereload');
 var jasminePhantomJs = require('gulp-jasmine2-phantomjs');
+var less = require('gulp-less');
 
 // External dependencies you do not want to rebundle while developing,
 // but include in your application deployment
@@ -28,7 +30,7 @@ var browserifyTask = function (options) {
   // Our app bundler
 	var appBundler = browserify({
 		entries: [options.src], // Only need initial file, browserify finds the rest
-   	transform: [reactify], // We want to convert JSX to normal javascript
+   	transform: [reactify, es6ify], // We want to convert JSX to normal javascript
 		debug: options.development, // Gives us sourcemapping
 		cache: {}, packageCache: {}, fullPaths: options.development // Requirement of watchify
 	});
@@ -126,10 +128,11 @@ var browserifyTask = function (options) {
 var cssTask = function (options) {
     if (options.development) {
       var run = function () {
-        console.log(arguments);
+        console.log(options);
         var start = new Date();
         console.log('Building CSS bundle');
         gulp.src(options.src)
+          .pipe(less())
           .pipe(concat('main.css'))
           .pipe(gulp.dest(options.dest))
           .pipe(notify(function () {
@@ -157,7 +160,7 @@ gulp.task('default', function () {
   
   cssTask({
     development: true,
-    src: './styles/**/*.css',
+    src: './app/**/*.less',
     dest: './build'
   });
 
@@ -173,7 +176,7 @@ gulp.task('deploy', function () {
   
   cssTask({
     development: false,
-    src: './styles/**/*.css',
+    src: './app/**/*.less',
     dest: './dist'
   });
 
