@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 var React = require('react');
 var Store = require('./trigger-chain-store');
 var actions = require('./trigger-chain-actions');

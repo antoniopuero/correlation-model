@@ -1,9 +1,9 @@
-/** @jsx React.DOM */
 var React = require('react');
 var Store = require('./trigger-store');
 var actions = require('./trigger-actions');
 var Checkbox = require('../checkbox/checkbox-view');
 var chainAction = require('../trigger-chain/trigger-chain-actions');
+var mainAction = require('../../actions');
 
 module.exports = React.createClass({
   displayName: 'TriggerEntity',
@@ -31,6 +31,8 @@ module.exports = React.createClass({
     } else {
       chainAction.deleteTriggerFromFeedback(this.state.number);
     }
+
+    mainAction.hideGetButtons();
   },
 
   render: function() {

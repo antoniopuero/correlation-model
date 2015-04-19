@@ -1,10 +1,10 @@
-/** @jsx React.DOM */
 var React = require('react');
 var Store = require('./Store.js');
 var actions = require('./actions.js');
 var triggerChainConst = require('./constants/trigger-chains');
 var TriggerChain = require('./components/trigger-chain/trigger-chain-view');
 var Button = require('./components/button/button-view');
+var LinearGraph = require('./components/linear-graph/linear-graph-view');
 var classNames = require('classnames');
 
 module.exports = React.createClass({
@@ -15,7 +15,9 @@ module.exports = React.createClass({
       triggerChain: Store.getChainConf(),
       triggerChainLength: Store.getChainConf()[0],
       sequence: Store.getSequence(),
-      maxStep: Store.getMaxStep()
+      refSequence: Store.getRefSequence(),
+      maxStep: Store.getMaxStep(),
+      hiddenButtons: Store.getHidden()
     };
   },
   componentWillMount: function () {
@@ -29,7 +31,8 @@ module.exports = React.createClass({
       step: Store.getStep(),
       sequence: Store.getSequence(),
       isMSequence: Store.isMSequence(),
-      newSequenceId: Store.getUniqueId()
+      newSequenceId: Store.getUniqueId(),
+      hiddenButtons: Store.getHidden()
     });
   },
   proceedChain: function () {
@@ -49,13 +52,22 @@ module.exports = React.createClass({
     var classes = classNames('sequence-wrapper', {
       'm-sequence': self.state.isMSequence
     });
+
+    var hidden = classNames({
+      'hidden': self.state.hiddenButtons
+    });
+
     return (
       <div className="container">
         <TriggerChain chainLength={this.state.triggerChainLength} step={this.state.step} maxStep={this.state.maxStep} newSequenceId={this.state.newSequenceId}/>
         <div className={classes}>{this.state.sequence.join('')}</div>
-        <Button name="One step" handler={this.proceedChain}/>
-        <Button name="Whole sequence" handler={this.getWholeSequence}/>
         <Button name="Init chain with feedback" handler={this.initSequence}/>
+        <div className={hidden}>
+          <Button name="One step" handler={this.proceedChain}/>
+          <Button name="Whole sequence" handler={this.getWholeSequence}/>
+        </div>
+
+        <LinearGraph data={this.state.refSequence} width={800} height={400}/>
       </div>
     );
   }

@@ -5,5 +5,6 @@ module.exports = flux.createActions([
   'stepForward',
   'lastStep',
   'updateSequence',
-  'initSequence'
+  'initSequence',
+  'hideGetButtons'
 ]);
