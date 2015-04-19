@@ -33,6 +33,7 @@ module.exports = React.createClass({
       } else {
         actions.changeStep(nextProps.step);
       }
+      appActions.updateSequence(Store.getSequence());
       return false;
     } else {
       return true;
@@ -46,7 +47,6 @@ module.exports = React.createClass({
     Store.removeChangeListener(this.changeState);
   },
   changeState: function () {
-    appActions.updateSequence(Store.getSequence(), Store.isMSequence());
     this.setState({
       triggerValues: Store.getTriggerValues()
     });

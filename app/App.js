@@ -1,7 +1,6 @@
 var React = require('react');
 var Store = require('./Store.js');
 var actions = require('./actions.js');
-var triggerChainConst = require('./constants/trigger-chains');
 var TriggerChain = require('./components/trigger-chain/trigger-chain-view');
 var Button = require('./components/button/button-view');
 var LinearGraph = require('./components/linear-graph/linear-graph-view');
@@ -9,13 +8,13 @@ var classNames = require('classnames');
 
 module.exports = React.createClass({
   getInitialState: function () {
-    var randomChain = triggerChainConst.getRandomChain();
-    actions.initChainConf(randomChain);
     return {
       triggerChain: Store.getChainConf(),
       triggerChainLength: Store.getChainConf()[0],
       sequence: Store.getSequence(),
       refSequence: Store.getRefSequence(),
+      signal: Store.getSignal(),
+      correlation: Store.getCorrelation(),
       maxStep: Store.getMaxStep(),
       hiddenButtons: Store.getHidden()
     };
@@ -32,7 +31,8 @@ module.exports = React.createClass({
       sequence: Store.getSequence(),
       isMSequence: Store.isMSequence(),
       newSequenceId: Store.getUniqueId(),
-      hiddenButtons: Store.getHidden()
+      hiddenButtons: Store.getHidden(),
+      correlation: Store.getCorrelation()
     });
   },
   proceedChain: function () {
@@ -67,7 +67,8 @@ module.exports = React.createClass({
           <Button name="Whole sequence" handler={this.getWholeSequence}/>
         </div>
 
-        <LinearGraph data={this.state.refSequence} width={800} height={400}/>
+        <LinearGraph data={this.state.correlation} width={800} height={400} updating={true}/>
+        <LinearGraph data={this.state.signal} width={800} height={400}/>
       </div>
     );
   }

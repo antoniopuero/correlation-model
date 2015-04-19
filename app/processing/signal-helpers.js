@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var mathHelpers = require('./math-helpers');
+var syncronize = require('./syncronize');
 
 module.exports = {
   meandrSignal: function (period, xspace, n) {

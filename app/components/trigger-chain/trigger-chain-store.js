@@ -9,7 +9,6 @@ module.exports = flux.createStore({
   feedbackTriggers: [],
   triggerValues: [],
   sequence: [],
-  trueMSequence: false,
 
   actions: [
     actions.initSequence,
@@ -29,6 +28,7 @@ module.exports = flux.createStore({
   },
 
   changeLength: function (length) {
+
     if (this.triggerValues.length != length) {
       this.triggerValues = _.map(_.range(length), function () {
         return 0;
@@ -49,7 +49,6 @@ module.exports = flux.createStore({
     this.step = lastStep;
     this.sequence = chainInAction.getSequence();
     this.triggerValues = chainInAction.getChainSnapshot();
-    this.trueMSequence = chainInAction.isMSequence(this.sequence);
     this.emitChange();
   },
 
@@ -67,9 +66,6 @@ module.exports = flux.createStore({
     },
     getSequence: function () {
       return this.sequence;
-    },
-    isMSequence: function () {
-      return this.trueMSequence;
     },
     getStep: function () {
       return this.step;
