@@ -5,7 +5,7 @@
   "author": "Christian Alfoni",
   "license": "ISC",
   "devDependencies": {
-    "browserify": "^6.2.0",
+    "browserify": "^9.0.3",
     "es6ify": "^1.6.0",
     "glob": "^4.0.6",
     "gulp": "^3.8.9",

@@ -5,10 +5,12 @@ var TriggerChain = require('./components/trigger-chain/trigger-chain-view');
 var Button = require('./components/button/button-view');
 var LinearGraph = require('./components/linear-graph/linear-graph-view');
 var classNames = require('classnames');
+var utils = require('./utils');
 
 module.exports = React.createClass({
   getInitialState: function () {
     return {
+      step: Store.getStep(),
       triggerChain: Store.getChainConf(),
       triggerChainLength: Store.getChainConf()[0],
       sequence: Store.getSequence(),
@@ -26,14 +28,15 @@ module.exports = React.createClass({
     Store.removeChangeListener(this.changeState);
   },
   changeState: function () {
-    this.setState({
+    var stateDiff = utils.objectDiff({
       step: Store.getStep(),
       sequence: Store.getSequence(),
       isMSequence: Store.isMSequence(),
       newSequenceId: Store.getUniqueId(),
       hiddenButtons: Store.getHidden(),
       correlation: Store.getCorrelation()
-    });
+    }, this.state);
+    this.setState(stateDiff);
   },
   proceedChain: function () {
     actions.stepForward();
@@ -67,7 +70,7 @@ module.exports = React.createClass({
           <Button name="Whole sequence" handler={this.getWholeSequence}/>
         </div>
 
-        <LinearGraph data={this.state.correlation} width={800} height={400} updating={true}/>
+        <LinearGraph data={this.state.correlation} width={800} height={400}/>
         <LinearGraph data={this.state.signal} width={800} height={400}/>
       </div>
     );

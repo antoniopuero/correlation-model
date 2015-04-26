@@ -40,7 +40,6 @@ module.exports = flux.createStore({
   changeStep: function (step) {
     this.step = step;
     this.sequence.unshift(chainInAction.moveValueThroughChain());
-    this.trueMSequence = chainInAction.isMSequence(this.sequence);
     this.triggerValues = chainInAction.getChainSnapshot();
     this.emitChange();
   },

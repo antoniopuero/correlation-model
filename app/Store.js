@@ -58,8 +58,8 @@ module.exports = (function () {
       }
 
       this.isMSequence = chainInAction.isMSequence(this.sequence);
-      if (this.sequence.length && this.isMSequence) {
-        this.correlation = signalHelpers.correlation(this.signal, this.sequence);
+      if (this.sequence.length) {
+        this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
       }
       this.emitChange();
     },

@@ -1,8 +1,8 @@
 var React = require('react');
-var actions = require('./linear-graph-actions')();
-var Store = require('./linear-graph-store')(actions);
 var _ = require('lodash');
 var {LineChart, Brush} = require('react-d3-components');
+
+var previousExtent = [];
 
 module.exports = React.createClass({
   displayName: 'LinearGraph',
@@ -21,18 +21,31 @@ module.exports = React.createClass({
       graphData = data;
     }
 
+    var yValues = _.map(graphData.values, function (value) {
+      return value.y;
+    });
+
+    var minY = Math.min.apply(Math, yValues);
+    var maxY = Math.max.apply(Math, yValues);
+
     return {
       graphData: graphData,
+      dataSetLength: yValues.length,
       width: width,
       height: height,
+      yScale: d3.scale.linear().domain([minY, maxY]).range([0, height - 70]),
       xScale: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]),
       xScaleBrush: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70])
     };
   },
-  componentWillReceiveProps: function (nextProps) {
-    console.log(nextProps)
 
-    var {data, width, updating} = nextProps;
+  componentWillReceiveProps: function (nextProps) {
+
+    var {data, width, height} = nextProps;
+
+    if (_.isEqual(data, this.props.data) && _.isEqual(width, this.props.width)) {
+      return;
+    }
 
     var graphData = {};
 
@@ -43,23 +56,30 @@ module.exports = React.createClass({
     } else {
       graphData = data;
     }
+
+    var yValues = _.map(graphData.values, function (value) {
+      return value.y;
+    });
+
+    var minY = Math.min.apply(Math, yValues);
+    var maxY = Math.max.apply(Math, yValues);
+
+    var xScaleDomain = !_.isEmpty(previousExtent) ? previousExtent : [0, graphData.values.length];
+    var xScale = d3.scale.linear().domain(xScaleDomain).range([0, width - 70]);
+    var xScaleBrush = d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]);
+    var yScale = d3.scale.linear().domain([minY, maxY]).range([0, height - 70]);
+
     this.setState({
       graphData: graphData,
-      xScale: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]),
-      xScaleBrush: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70])
+      dataSetLength: yValues.length,
+      yScale: yScale,
+      xScale: xScale,
+      xScaleBrush: xScaleBrush
     });
   },
 
-  //componentWillMount: function () {
-  //  Store.addChangeListener(this.changeState);
-  //},
-  //componentWillUnmount: function () {
-  //  Store.removeChangeListener(this.changeState);
-  //},
-  //changeState: function () {
-  //},
-
   _onChange: function (extent) {
+    previousExtent = extent;
     this.setState({xScale: d3.scale.linear().domain([extent[0], extent[1]]).range([0, this.state.width - 70])});
   },
 
@@ -76,6 +96,7 @@ module.exports = React.createClass({
             height={this.state.height}
             margin={{top: 10, bottom: 50, left: 50, right: 20}}
             xScale={this.state.xScale}
+            yScale={this.state.yScale}
             />
 
           <div className="brush" style={{float: 'none'}}>
@@ -84,7 +105,7 @@ module.exports = React.createClass({
               height={50}
               margin={{top: 0, bottom: 30, left: 50, right: 20}}
               xScale={this.state.xScaleBrush}
-              extent={[0, 2]}
+              extent={[0, Math.floor(this.state.dataSetLength / 50)]}
               onChange={this._onChange}
               />
           </div>

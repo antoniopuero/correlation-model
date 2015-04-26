@@ -21,10 +21,9 @@ module.exports = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function (nextProps, nextState) {
+  componentWillReceiveProps: function (nextProps) {
     if (nextProps.newSequenceId !== this.props.newSequenceId) {
       actions.initSequence();
-      return false;
     }
 
     if (nextProps.step !== this.props.step) {
@@ -34,9 +33,6 @@ module.exports = React.createClass({
         actions.changeStep(nextProps.step);
       }
       appActions.updateSequence(Store.getSequence());
-      return false;
-    } else {
-      return true;
     }
   },
 

@@ -1,6 +1,4 @@
 var React = require('react');
-var Store = require('./trigger-store');
-var actions = require('./trigger-actions');
 var Checkbox = require('../checkbox/checkbox-view');
 var chainAction = require('../trigger-chain/trigger-chain-actions');
 var mainAction = require('../../actions');
@@ -15,15 +13,6 @@ module.exports = React.createClass({
       number: this.props.number
     };
   },
-
-  //componentWillMount: function () {
-  //  Store.addChangeListener(this.changeState);
-  //},
-  //componentWillUnmount: function () {
-  //  Store.removeChangeListener(this.changeState);
-  //},
-  //changeState: function () {
-  //},
 
   addTriggerToFeedback: function (e) {
     if (e.target.checked) {
