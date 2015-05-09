@@ -10,43 +10,90 @@ var signalConst = require('./constants/signals');
 
 module.exports = (function () {
 
-  var randomChain = triggerChainConst.getRandomChain(),
-    randomSignal = signalConst.getRandomSignal(),
-    chainInAction = processTriggerChain(),
-    refSequence;
+  var firstRandomChain = triggerChainConst.getRandomChain(),
+    firstRandomSignal = signalConst.getRandomSignal(),
+    firstChainInAction = processTriggerChain(),
+    secondRandomChain = triggerChainConst.getRandomChain(),
+    secondRandomSignal = signalConst.getRandomSignal(),
+    secondChainInAction = processTriggerChain(),
+    dynamicChain = processTriggerChain(),
+    firstRefSequence,
+    secondRefSequence,
+    mixedSignal;
 
-  chainInAction.initChain.apply(chainInAction, randomChain);
-  chainInAction.set();
-  refSequence = chainInAction.getSequence();
+  console.log(firstRandomSignal, secondRandomSignal);
+
+  firstChainInAction.initChain.apply(firstChainInAction, firstRandomChain);
+  firstChainInAction.set();
+  firstRefSequence = firstChainInAction.getSequence();
+
+  secondChainInAction.initChain.apply(secondChainInAction, secondRandomChain);
+  secondChainInAction.set();
+  secondRefSequence = secondChainInAction.getSequence();
+
+
+  dynamicChain.initChain(firstRandomChain[0], [firstRandomChain[0]]); //last trigger is always in the circuit
+  dynamicChain.set();
+
+  mixedSignal = signalHelpers.addSignals([
+    signalHelpers.mixSignalWithMSequence(firstRandomSignal, firstRefSequence),
+    signalHelpers.mixSignalWithMSequence(secondRandomSignal, secondRefSequence)
+  ]);
 
   return flux.createStore({
-    triggerChain: randomChain,
-    maxStep: Math.pow(2, randomChain[0]) - 1,
+    triggerChain: firstRandomChain,
+    maxStep: Math.pow(2, firstRandomChain[0]) - 1,
     step: 0,
     sequence: [],
-    refSequence: refSequence,
-    signal: signalHelpers.mixSignalWithMSequence(randomSignal, refSequence),
+    firstRefSequence: firstRefSequence,
+    signal: mixedSignal,
     correlation: [],
     isMSequence: false,
     hiddenButtons: true,
-    newSequenceId: '',
+    newSequenceId: _.uniqueId('sequence_'),
+    triggerValues: dynamicChain.getChainSnapshot(),
+    feedbackTriggers: [firstRandomChain[0]],
     actions: [
       actions.stepForward,
       actions.lastStep,
       actions.updateSequence,
       actions.initSequence,
-      actions.hideGetButtons
+      actions.hideGetButtons,
+      actions.addTriggerToFeedback,
+      actions.deleteTriggerFromFeedback
     ],
+
+    clearSequence: function () {
+      this.step = 0;
+      this.sequence = [];
+      this.isMSequence = false;
+      this.correlation = [];
+      this.hiddenButtons = false;
+      this.newSequenceId = _.uniqueId('sequence_');
+    },
+
+    calculateCorrelation: function () {
+      if (this.sequence.length) {
+        this.isMSequence = signalHelpers.isMSequence(this.sequence);
+        this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
+      }
+    },
 
     stepForward: function () {
       if (this.step < this.maxStep) {
         this.step += 1;
+        this.sequence.unshift(dynamicChain.moveValueThroughChain());
+        this.triggerValues = dynamicChain.getChainSnapshot();
+        this.calculateCorrelation();
         this.emitChange();
       }
     },
 
     lastStep: function () {
       this.step = this.maxStep;
+      this.sequence = dynamicChain.getSequence();
+      this.triggerValues = dynamicChain.getChainSnapshot();
+      this.calculateCorrelation();
       this.emitChange();
     },
 
@@ -57,7 +104,7 @@ module.exports = (function () {
         this.sequence.unshift(value);
       }
 
-      this.isMSequence = chainInAction.isMSequence(this.sequence);
+      this.isMSequence = signalHelpers.isMSequence(this.sequence);
       if (this.sequence.length) {
         this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
       }
@@ -65,16 +112,28 @@ module.exports = (function () {
     },
 
     initSequence: function () {
-      this.step = 0;
-      this.sequence = [];
-      this.isMSequence = false;
-      this.hiddenButtons = false;
-      this.newSequenceId = _.uniqueId('sequence_');
+      this.clearSequence();
+      dynamicChain = processTriggerChain();
+      dynamicChain.initChain(firstRandomChain[0], this.feedbackTriggers);
+      dynamicChain.set();
+      this.triggerValues = dynamicChain.getChainSnapshot();
       this.emitChange();
     },
 
     hideGetButtons: function () {
       this.hiddenButtons = true;
+      this.emitChange();
+    },
+
+    addTriggerToFeedback: function (triggerNumber) {
+      this.clearSequence();
+      this.feedbackTriggers.push(triggerNumber);
+      this.emitChange();
+    },
+
+    deleteTriggerFromFeedback: function (triggerNumber) {
+      this.clearSequence();
+      this.feedbackTriggers = _.without(this.feedbackTriggers, triggerNumber);
       this.emitChange();
     },
 
@@ -89,7 +148,7 @@ module.exports = (function () {
         return this.sequence;
       },
       getRefSequence: function () {
-        return this.refSequence;
+        return this.firstRefSequence;
       },
       getMaxStep: function () {
         return this.maxStep;
@@ -108,6 +167,12 @@ module.exports = (function () {
       },
       getCorrelation: function () {
         return this.correlation;
+      },
+      getTriggerValues: function () {
+        return this.triggerValues;
+      },
+      getFeedbackTriggers: function () {
+        return this.feedbackTriggers;
       }
     }
   });

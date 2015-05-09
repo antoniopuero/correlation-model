@@ -47,6 +47,23 @@ module.exports = {
     });
   },
 
+  addSignals: function (signals) {
+    var maxSignalLength = Math.max.apply(Math, _.map(signals, function (signal) {
+      return signal.length;
+    }));
+
+    return _.map(_.range(maxSignalLength), function (index) {
+      return _.reduce(signals, function (currentAcc, signal) {
+          if (signal[index]) {
+            return currentAcc + signal[index];
+          } else {
+            return currentAcc;
+          }
+        }, 0);
+    })
+
+  },
+
   transformBinaryData: function (signal) {
     return _.map(signal, function (val) {
       return val ? -1 : 1;
@@ -63,11 +80,20 @@ module.exports = {
     return this.addCarrier(signal, carrier, 1);
   },
 
-  addRandomNoise: function (signal, noiseAmplitude, noiseBitsAmount) {
+  generateRandomNoise: function (signal, noiseAmplitude, noiseBitsAmount) {
     noiseAmplitude = noiseAmplitude ? noiseAmplitude : 1;
-    var noise =  _.map(_.range(signal.length * noiseBitsAmount), function (value) {
+
+    return _.map(_.range(signal.length * noiseBitsAmount), function (value) {
       return noiseAmplitude * Math.random().toPrecision(1);
     });
+  },
+
+  isMSequence: function (sequence) {
+    var zerosCount = 1, onesCount = 0;
+    _.each(sequence, function (value) {
+      value ? onesCount++ : zerosCount++;
+    });
+    return zerosCount === onesCount;
   },
 
 

@@ -1,11 +1,17 @@
 var hardcodedChains = [
-  [5, [3, 5]],
-  [5, [2, 5]],
+  //[10, [1, 3, 7, 10]],
+  //[10, [1, 4, 9, 10]],
+  //[10, [1, 6, 9, 10]],
+  //[10, [1, 5, 8, 10]],
+  //[10, [1, 6, 8, 10]],
   [10, [3, 10]],
   [10, [7, 10]]
 ];
 module.exports = {
   getRandomChain: function () {
-    return hardcodedChains[Math.floor(Math.random() * hardcodedChains.length)];
+    var index = Math.floor(Math.random() * hardcodedChains.length);
+    var chain = hardcodedChains[index];
+    hardcodedChains.splice(index, 1); //to avoid chains repeating
+    return chain;
   }
 };

@@ -1,13 +1,9 @@
-var hardcodedSignals = [
-  [1, 0, 1, 1],
-  [1, 0, 0, 1],
-  [1, 1, 1, 0],
-  [1, 0, 1, 0],
-  [1, 1, 1, 1],
-  [0, 0, 0, 0]
-];
+var _ = require('lodash');
+var commonSignalLength = 5;
 module.exports = {
   getRandomSignal: function () {
-    return hardcodedSignals[Math.floor(Math.random() * hardcodedSignals.length)];
+    return _.map(_.range(commonSignalLength), function () {
+      return Math.round(Math.random());
+    });
   }
 };

@@ -1,7 +1,6 @@
 var React = require('react');
 var Checkbox = require('../checkbox/checkbox-view');
-var chainAction = require('../trigger-chain/trigger-chain-actions');
-var mainAction = require('../../actions');
+var actions = require('../../actions');
 
 module.exports = React.createClass({
   displayName: 'TriggerEntity',
@@ -16,20 +15,21 @@ module.exports = React.createClass({
 
   addTriggerToFeedback: function (e) {
     if (e.target.checked) {
-      chainAction.addTriggerToFeedback(this.state.number);
+      actions.addTriggerToFeedback(this.state.number);
     } else {
-      chainAction.deleteTriggerFromFeedback(this.state.number);
+      actions.deleteTriggerFromFeedback(this.state.number);
     }
 
-    mainAction.hideGetButtons();
+    actions.hideGetButtons();
   },
 
   render: function() {
+    var {number, value, inFeedback} = this.props;
     return (
       <div className="trigger">
-        <span className="value">{this.props.value}</span>
-        <span className="number">{this.props.number}</span>
-        <Checkbox name={this.props.number} handler={this.addTriggerToFeedback}/>
+        <span className="value">{value}</span>
+        <span className="number">{number}</span>
+        <Checkbox name={number} checked={inFeedback} handler={this.addTriggerToFeedback}/>
       </div>
     );
   }

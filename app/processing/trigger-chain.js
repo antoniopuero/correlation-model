@@ -80,14 +80,6 @@ module.exports = function () {
     });
   };
 
-  var isMSequence = function (sequence) {
-    var zerosCount = 1, onesCount = 0;
-    _.each(sequence, function (value) {
-      value ? onesCount ++ : zerosCount ++;
-    });
-    return zerosCount === onesCount;
-  };
-
   var getChainLength = function () {
     return triggers.length;
   };
@@ -106,7 +98,6 @@ module.exports = function () {
     set: set,
     reset: reset,
     getSequence: getSequence,
-    isMSequence: isMSequence,
     getChainLength: getChainLength,
     getChainSnapshot: getChainSnapshot
   }

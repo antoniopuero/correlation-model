@@ -1,39 +1,25 @@
 var React = require('react');
-var Store = require('./trigger-chain-store');
-var actions = require('./trigger-chain-actions');
-var appActions = require('../../actions');
+var Store = require('../../Store');
+var actions = require('../../actions');
 var TriggerEntity = require('../trigger/trigger-view');
 var _ = require('lodash');
 
-var chainInAction;
 
 module.exports = React.createClass({
   displayName: 'TriggerChain',
 
   getInitialState: function () {
     var {chainLength, maxStep} = this.props;
-    actions.changeLength(chainLength);
     return {
       step: Store.getStep(),
-      chainLength: Store.getLength(),
+      chainLength: chainLength,
       triggerValues: Store.getTriggerValues(),
+      triggersInFeedback: Store.getFeedbackTriggers(),
       maxStep: maxStep
     };
   },
 
   componentWillReceiveProps: function (nextProps) {
-    if (nextProps.newSequenceId !== this.props.newSequenceId) {
-      actions.initSequence();
-    }
-
-    if (nextProps.step !== this.props.step) {
-      if (nextProps.step === this.state.maxStep) {
-        actions.returnSequence(this.state.maxStep);
-      } else {
-        actions.changeStep(nextProps.step);
-      }
-      appActions.updateSequence(Store.getSequence());
-    }
   },
 
   componentWillMount: function () {
@@ -44,15 +30,17 @@ module.exports = React.createClass({
   },
   changeState: function () {
     this.setState({
-      triggerValues: Store.getTriggerValues()
+      triggerValues: Store.getTriggerValues(),
+      triggersInFeedback: Store.getFeedbackTriggers()
     });
   },
   renderTrigger: function (value, index) {
+    var isInFeedback = _.indexOf(this.state.triggersInFeedback, index + 1) !== -1;
     if (!value) {
       value = 0;
     }
     return (
-        <TriggerEntity value={value} number={index + 1}/>
+        <TriggerEntity value={value} number={index + 1} inFeedback={isInFeedback}/>
     );
   },
 

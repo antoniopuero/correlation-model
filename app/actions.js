@@ -5,5 +5,7 @@ module.exports = flux.createActions([
   'lastStep',
   'updateSequence',
   'initSequence',
-  'hideGetButtons'
+  'hideGetButtons',
+  'addTriggerToFeedback',
+  'deleteTriggerFromFeedback'
 ]);
