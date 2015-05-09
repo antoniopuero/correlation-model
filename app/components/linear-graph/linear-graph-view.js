@@ -9,13 +9,15 @@ module.exports = React.createClass({
 
   getInitialState: function () {
 
-    var {data, width, height, updating} = this.props;
+    var {data, width, height, xOffset} = this.props;
+
+    xOffset = xOffset ? xOffset : 0;
 
     var graphData = {};
 
     if (_.isArray(data)) {
       graphData.values = _.map(data, function (value, index) {
-        return {x: index, y: value};
+        return {x: xOffset + index, y: value};
       });
     } else {
       graphData = data;
@@ -33,7 +35,7 @@ module.exports = React.createClass({
       dataSetLength: yValues.length,
       width: width,
       height: height,
-      yScale: d3.scale.linear().domain([minY, maxY]).range([0, height - 70]),
+      yScale: d3.scale.linear().domain([minY, maxY]).range([height - 70, 0]),
       xScale: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]),
       xScaleBrush: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70])
     };
@@ -41,7 +43,9 @@ module.exports = React.createClass({
 
   componentWillReceiveProps: function (nextProps) {
 
-    var {data, width, height} = nextProps;
+    var {data, width, height, xOffset} = nextProps;
+
+    xOffset = xOffset ? xOffset : 0;
 
     if (_.isEqual(data, this.props.data) && _.isEqual(width, this.props.width)) {
       return;
@@ -51,7 +55,7 @@ module.exports = React.createClass({
 
     if (_.isArray(data)) {
       graphData.values = _.map(data, function (value, index) {
-        return {x: index, y: value};
+        return {x: index + xOffset, y: value};
       });
     } else {
       graphData = data;
@@ -67,7 +71,7 @@ module.exports = React.createClass({
     var xScaleDomain = !_.isEmpty(previousExtent) ? previousExtent : [0, graphData.values.length];
     var xScale = d3.scale.linear().domain(xScaleDomain).range([0, width - 70]);
     var xScaleBrush = d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]);
-    var yScale = d3.scale.linear().domain([minY, maxY]).range([0, height - 70]);
+    var yScale = d3.scale.linear().domain([minY, maxY]).range([height - 70, 0]);
 
     this.setState({
       graphData: graphData,

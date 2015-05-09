@@ -53,14 +53,16 @@ module.exports = (function () {
     newSequenceId: _.uniqueId('sequence_'),
     triggerValues: dynamicChain.getChainSnapshot(),
     feedbackTriggers: [firstRandomChain[0]],
+    userInputSignals: [_.map(firstRandomSignal, () => ''), _.map(firstRandomSignal, () => '')],
+    signalCorrectnessArray: ['', ''],
     actions: [
       actions.stepForward,
       actions.lastStep,
-      actions.updateSequence,
       actions.initSequence,
       actions.hideGetButtons,
       actions.addTriggerToFeedback,
-      actions.deleteTriggerFromFeedback
+      actions.deleteTriggerFromFeedback,
+      actions.userChangeInputSignals
     ],
 
     clearSequence: function () {
@@ -97,20 +99,6 @@ module.exports = (function () {
       this.emitChange();
     },
 
-    updateSequence: function (value) {
-      if (_.isArray(value)) {
-        this.sequence = value;
-      } else {
-        this.sequence.unshift(value);
-      }
-
-      this.isMSequence = signalHelpers.isMSequence(this.sequence);
-      if (this.sequence.length) {
-        this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
-      }
-      this.emitChange();
-    },
-
     initSequence: function () {
       this.clearSequence();
       dynamicChain = processTriggerChain();
@@ -134,6 +122,25 @@ module.exports = (function () {
     deleteTriggerFromFeedback: function (triggerNumber) {
       this.clearSequence();
       this.feedbackTriggers = _.without(this.feedbackTriggers, triggerNumber);
+      this.emitChange();
+    },
+
+    userChangeInputSignals: function (signalIndex, userInputSignals) {
+      var parsedSignal = _.map(userInputSignals[signalIndex], parseFloat);
+      this.userInputSignals = userInputSignals;
+
+      if (!_.any(parsedSignal, _.isNaN)) {
+        if (_.isEqual(parsedSignal, firstRandomSignal) && _.indexOf(this.signalCorrectnessArray, 'first') === -1) {
+          this.signalCorrectnessArray[signalIndex] = 'first';
+        } else if (_.isEqual(parsedSignal, secondRandomSignal) && _.indexOf(this.signalCorrectnessArray, 'second') === -1) {
+          this.signalCorrectnessArray[signalIndex] = 'second';
+        } else {
+          this.signalCorrectnessArray[signalIndex] = '';
+        }
+      } else {
+        this.signalCorrectnessArray[signalIndex] = '';
+      }
+
       this.emitChange();
     },
 
@@ -173,6 +180,12 @@ module.exports = (function () {
       },
       getFeedbackTriggers: function () {
         return this.feedbackTriggers;
+      },
+      getUserInputSignals: function () {
+        return this.userInputSignals;
+      },
+      getSignalCorrectnessArray: function () {
+        return this.signalCorrectnessArray;
       }
     }
   });

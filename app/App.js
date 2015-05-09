@@ -4,6 +4,7 @@ var actions = require('./actions.js');
 var TriggerChain = require('./components/trigger-chain/trigger-chain-view');
 var Button = require('./components/button/button-view');
 var LinearGraph = require('./components/linear-graph/linear-graph-view');
+var InputSection = require('./components/input-section/input-section-view');
 var classNames = require('classnames');
 var utils = require('./utils');
 
@@ -18,7 +19,9 @@ module.exports = React.createClass({
       signal: Store.getSignal(),
       correlation: Store.getCorrelation(),
       maxStep: Store.getMaxStep(),
-      hiddenButtons: Store.getHidden()
+      hiddenButtons: Store.getHidden(),
+      userInputSignals: Store.getUserInputSignals(),
+      signalCorrectnessArray: Store.getSignalCorrectnessArray(),
     };
   },
   componentWillMount: function () {
@@ -34,7 +37,9 @@ module.exports = React.createClass({
       isMSequence: Store.isMSequence(),
       newSequenceId: Store.getUniqueId(),
       hiddenButtons: Store.getHidden(),
-      correlation: Store.getCorrelation()
+      correlation: Store.getCorrelation(),
+      userInputSignals: Store.getUserInputSignals(),
+      signalCorrectnessArray: Store.getSignalCorrectnessArray()
     }, this.state);
     this.setState(stateDiff);
   },
@@ -60,18 +65,22 @@ module.exports = React.createClass({
       'hidden': self.state.hiddenButtons
     });
 
+    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray} = this.state;
+
     return (
       <div className="container">
-        <TriggerChain chainLength={this.state.triggerChainLength} step={this.state.step} maxStep={this.state.maxStep} newSequenceId={this.state.newSequenceId}/>
-        <div className={classes}>{this.state.sequence.join('')}</div>
+        <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId}/>
+        <div className={classes}>{sequence.join('')}</div>
         <Button name="Init chain with feedback" handler={this.initSequence}/>
         <div className={hidden}>
           <Button name="One step" handler={this.proceedChain}/>
           <Button name="Whole sequence" handler={this.getWholeSequence}/>
         </div>
 
-        <LinearGraph data={this.state.correlation} width={800} height={400}/>
-        <LinearGraph data={this.state.signal} width={800} height={400}/>
+        <LinearGraph data={correlation} xOffset={50} width={800} height={400}/>
+        <LinearGraph data={signal} width={800} height={400}/>
+        <InputSection userInputSignals={userInputSignals} signalCorrectnessArray={signalCorrectnessArray}/>
+
       </div>
     );
   }

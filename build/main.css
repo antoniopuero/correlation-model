@@ -6,6 +6,29 @@
   color: #cccccc;
 }
 
+.input-section .inputs {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.input-section .inputs .input-field {
+  display: inline-block;
+  margin-left: 20px;
+}
+.input-section .inputs .input-field input {
+  display: inline-block;
+  width: 30px;
+}
+.input-section .correctness {
+  display: none;
+  width: 20px;
+  height: 20px;
+  margin-left: 20px;
+}
+.input-section .correctness.correct {
+  display: inline-block;
+  background: #11cc11;
+}
+
 .axis {
   fill: none;
   stroke: #000;

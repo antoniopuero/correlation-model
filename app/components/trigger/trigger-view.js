@@ -5,19 +5,12 @@ var actions = require('../../actions');
 module.exports = React.createClass({
   displayName: 'TriggerEntity',
 
-  getInitialState: function () {
-
-    return {
-      value: this.props.value,
-      number: this.props.number
-    };
-  },
 
   addTriggerToFeedback: function (e) {
     if (e.target.checked) {
-      actions.addTriggerToFeedback(this.state.number);
+      actions.addTriggerToFeedback(this.props.number);
     } else {
-      actions.deleteTriggerFromFeedback(this.state.number);
+      actions.deleteTriggerFromFeedback(this.props.number);
     }
 
     actions.hideGetButtons();
