@@ -1,12 +1,11 @@
 var gulp = require('gulp');
 var source = require('vinyl-source-stream'); // Used to stream bundle for further handling
+var _ = require('lodash');
 var browserify = require('browserify');
 var es6ify = require('es6ify');
 var watchify = require('watchify');
 var reactify = require('reactify'); 
 var gulpif = require('gulp-if');
-var uglify = require('gulp-uglify');
-var streamify = require('gulp-streamify');
 var notify = require('gulp-notify');
 var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
@@ -16,12 +15,13 @@ var glob = require('glob');
 var livereload = require('gulp-livereload');
 var jasminePhantomJs = require('gulp-jasmine2-phantomjs');
 var less = require('gulp-less');
+var packageFile = require('./package.json');
 
 // External dependencies you do not want to rebundle while developing,
 // but include in your application deployment
 var dependencies = [
 	'react',
-  'react-addons',
+  'react/addons',
   'flux-react'
 ];
 
@@ -49,7 +49,6 @@ var browserifyTask = function (options) {
     appBundler.bundle()
       .on('error', gutil.log)
       .pipe(source('main.js'))
-      .pipe(gulpif(!options.development, streamify(uglify())))
       .pipe(gulp.dest(options.dest))
       .pipe(gulpif(options.development, livereload()))
       .pipe(notify(function () {
@@ -115,7 +114,6 @@ var browserifyTask = function (options) {
     vendorsBundler.bundle()
       .on('error', gutil.log)
       .pipe(source('vendors.js'))
-      .pipe(gulpif(!options.development, streamify(uglify())))
       .pipe(gulp.dest(options.dest))
       .pipe(notify(function () {
         console.log('VENDORS bundle built in ' + (Date.now() - start) + 'ms');
@@ -160,7 +158,7 @@ gulp.task('default', function () {
   
   cssTask({
     development: true,
-    src: './app/**/*.less',
+    src: ['./app/**/*.less'].concat(packageFile.vendorStyles),
     dest: './build'
   });
 
@@ -176,7 +174,7 @@ gulp.task('deploy', function () {
   
   cssTask({
     development: false,
-    src: './app/**/*.less',
+    src: ['./app/**/*.less'].concat(packageFile.vendorStyles),
     dest: './dist'
   });
 

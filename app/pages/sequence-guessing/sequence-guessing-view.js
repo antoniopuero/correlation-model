@@ -1,12 +1,12 @@
 var React = require('react');
-var Store = require('./Store.js');
-var actions = require('./actions.js');
-var TriggerChain = require('./components/trigger-chain/trigger-chain-view');
-var Button = require('./components/button/button-view');
-var LinearGraph = require('./components/linear-graph/linear-graph-view');
-var InputSection = require('./components/input-section/input-section-view');
+var Store = require('../../stores/guessing-store');
+var actions = require('../../actions/guessing-actions');
+var TriggerChain = require('../../ui-components/trigger-chain/trigger-chain-view');
+var Button = require('../../ui-components/button/button-view');
+var LinearGraph = require('../../ui-components/linear-graph/linear-graph-view');
+var InputSection = require('../../ui-components/input-section/input-section-view');
 var classNames = require('classnames');
-var utils = require('./utils');
+var utils = require('../../utils');
 
 module.exports = React.createClass({
   getInitialState: function () {

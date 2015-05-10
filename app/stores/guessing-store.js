@@ -1,11 +1,11 @@
 'use strict';
 var flux = require('flux-react');
-var actions = require('./actions.js');
+var actions = require('../actions/guessing-actions');
 var _ = require('lodash');
-var processTriggerChain = require('./processing/trigger-chain');
-var signalHelpers = require('./processing/signal-helpers');
-var triggerChainConst = require('./constants/trigger-chains');
-var signalConst = require('./constants/signals');
+var processTriggerChain = require('../processing/trigger-chain');
+var signalHelpers = require('../processing/signal-helpers');
+var triggerChainConst = require('../constants/trigger-chains');
+var signalConst = require('../constants/signals');
 
 
 module.exports = (function () {
@@ -20,6 +20,8 @@ module.exports = (function () {
     firstRefSequence,
     secondRefSequence,
     mixedSignal;
+
+  console.log(firstRandomChain)
 
   console.log(firstRandomSignal, secondRandomSignal);
 

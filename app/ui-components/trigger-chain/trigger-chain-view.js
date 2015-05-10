@@ -1,6 +1,6 @@
 var React = require('react');
-var Store = require('../../Store');
-var actions = require('../../actions');
+var Store = require('../../stores/guessing-store');
+var actions = require('../../actions/guessing-actions');
 var TriggerEntity = require('../trigger/trigger-view');
 var _ = require('lodash');
 

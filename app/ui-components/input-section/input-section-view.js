@@ -1,6 +1,6 @@
 var React = require('react');
 var _ = require('lodash');
-var actions = require('../../actions');
+var actions = require('../../actions/guessing-actions');
 var InputView = require('./input-view');
 var classNames = require('classnames');
 

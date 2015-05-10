@@ -1,6 +1,6 @@
 var React = require('react');
 var Checkbox = require('../checkbox/checkbox-view');
-var actions = require('../../actions');
+var actions = require('../../actions/guessing-actions');
 
 module.exports = React.createClass({
   displayName: 'TriggerEntity',
