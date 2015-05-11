@@ -80,11 +80,12 @@ module.exports = {
     return this.addCarrier(signal, carrier, 1);
   },
 
-  generateRandomNoise: function (signal, noiseAmplitude, noiseBitsAmount) {
-    noiseAmplitude = noiseAmplitude ? noiseAmplitude : 1;
-
-    return _.map(_.range(signal.length * noiseBitsAmount), function (value) {
-      return noiseAmplitude * Math.random().toPrecision(1);
+  addRandomNoise: function (signal, noiseAmplitude) {
+    noiseAmplitude = noiseAmplitude ? noiseAmplitude : Math.max.apply(Math, signal);
+    return _.map(signal, function (value, index) {
+      return _.map(_.range(Math.ceil(Math.random() * 3)), function () {
+        return value + Math.random() * noiseAmplitude;
+      });
     });
   },
 
@@ -97,7 +98,7 @@ module.exports = {
   },
 
 
-  correlation: function (signal, anotherSignal) {
+  correlation: function (signal, anotherSignal, withNoise) {
 
     if (signal.length != anotherSignal.length) {
       signal = _.map(_.range(Math.floor(signal.length / anotherSignal.length)), function (value) {
@@ -113,13 +114,15 @@ module.exports = {
 
         return _.reduce(anotherSignal, function (acc2, val2, index2) {
           var realIndex = (index + index2) % anotherSignal.length;
+          var partialSignalValue = withNoise ? mathHelpers.average(partialSignal[index2]) : partialSignal[index2];
 
-          return acc2 + partialSignal[index2] * anotherSignal[realIndex];
+          return acc2 + partialSignalValue * anotherSignal[realIndex];
         }, 0);
 
       }));
 
     }, []);
+
 
     return correlation;
   }

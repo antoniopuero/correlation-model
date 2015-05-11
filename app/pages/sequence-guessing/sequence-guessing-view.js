@@ -68,7 +68,7 @@ module.exports = React.createClass({
     var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray} = this.state;
 
     return (
-      <div className="container">
+      <div className="sequence-guessing-container">
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId}/>
         <div className={classes}>{sequence.join('')}</div>
         <Button name="Init chain with feedback" handler={this.initSequence}/>

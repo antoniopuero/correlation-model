@@ -1,11 +1,16 @@
 var React = require('react');
 
-var Router = require('react-router'); // or var Router = ReactRouter; in browsers
+var Router = require('react-router');
 
-var DefaultRoute = Router.DefaultRoute;
+var _ = require('lodash');
+var classNames = require('classnames');
+
+var Redirect = Router.Redirect;
 var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
+
+var texts = require('./constants/texts');
 
 var SignalWithSequence = require('./pages/signal-with-sequence/signal-with-sequence-view');
 var SignalOnCarrier = require('./pages/signal-on-carrier/signal-on-carrier-view');
@@ -13,26 +18,80 @@ var CommonChannel = require('./pages/common-channel/common-channel-view');
 var CommonChannelWithNoise = require('./pages/common-channel-with-noise/common-channel-with-noise-view');
 var CodeDivision = require('./pages/code-divison-multiple-access/code-division-view');
 var SequenceGuessing = require('./pages/sequence-guessing/sequence-guessing-view');
-//var App = require('./App.js');
-//React.render(<App/>, document.body);
+
+var routesOrder = ['signal-sequence'
+  , 'signal-on-carrier'
+  , 'common-channel'
+  , 'common-channel-with-noise'
+  , 'code-division'
+  , 'sequence-guessing'];
+
+var deleteLeadingSlash = function (path) {
+  return path.replace(/^\//, '');
+};
+
+var getIndex = function (hashPath) {
+  return _.indexOf(routesOrder, deleteLeadingSlash(hashPath));
+};
+
+var hasNext = function (hashPath) {
+  var index = getIndex(hashPath);
+  return index !== -1 && index !== (routesOrder.length - 1);
+};
+
+var hasPrev = function (hashPath) {
+  var index = getIndex(hashPath);
+  return index !== -1 && index !== 0;
+};
+var goNext = function (hashPath) {
+  var index = getIndex(hashPath) + 1;
+  return routesOrder[index];
+};
+
+var goPrev = function (hashPath) {
+  var index = getIndex(hashPath) - 1;
+  return routesOrder[index];
+};
 
 var App = React.createClass({
   render: function () {
+    var currentPath = Router.HashLocation.getCurrentPath();
+    var prevLink, nextLink;
+    if (hasPrev(currentPath)) {
+      prevLink = <Link to={goPrev(currentPath)} className="btn btn-default btn-lg">{texts.commonTexts.prevButton}</Link>;
+    }
+    if (hasNext(currentPath)) {
+      nextLink = <Link to={goNext(currentPath)} className="btn btn-default btn-lg">{texts.commonTexts.nextButton}</Link>;
+    }
     return (
       <div>
-        <header>
-          <ul>
-            <li><Link to="signal-sequence">signal-sequence</Link></li>
-            <li><Link to="signal-on-carrier">signal-on-carrier</Link></li>
-            <li><Link to="common-channel">common-channel</Link></li>
-            <li><Link to="common-channel-with-noise">common-channel-with-noise</Link></li>
-            <li><Link to="code-division">code-division</Link></li>
-            <li><Link to="sequence-guessing">sequence-guessing</Link></li>
-          </ul>
-        </header>
 
-        {/* this is the important part */}
-        <RouteHandler/>
+        <nav className="navbar navbar-default">
+          <div className="container-fluid">
+            <div className="navbar-header">
+              <a className="navbar-brand" href="#">
+                {texts.commonTexts.mainHeader}
+              </a>
+            </div>
+          </div>
+        </nav>
+
+
+        <div className="container-fluid">
+          {/* this is the important part */}
+          <RouteHandler/>
+        </div>
+
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-6 col-xs-6">
+              {prevLink}
+            </div>
+            <div className="col-md-6 col-xs-6 text-right">
+              {nextLink}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -46,6 +105,7 @@ var routes = (
     <Route name="common-channel-with-noise" handler={CommonChannelWithNoise}/>
     <Route name="code-division" handler={CodeDivision}/>
     <Route name="sequence-guessing" handler={SequenceGuessing}/>
+    <Redirect from="/" to="signal-sequence"/>
   </Route>
 );
 

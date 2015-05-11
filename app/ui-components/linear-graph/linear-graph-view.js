@@ -1,5 +1,6 @@
 var React = require('react');
 var _ = require('lodash');
+var classNames = require('classnames');
 var {LineChart, Brush} = require('react-d3-components');
 
 var previousExtent = [];
@@ -9,19 +10,35 @@ module.exports = React.createClass({
 
   getInitialState: function () {
 
-    var {data, width, height, xOffset} = this.props;
+    var {data, width, height, xOffset, emulateBars} = this.props;
 
     xOffset = xOffset ? xOffset : 0;
 
     var graphData = {};
 
     if (_.isArray(data)) {
-      graphData.values = _.map(data, function (value, index) {
-        return {x: xOffset + index, y: value};
-      });
+
+      if (emulateBars) {
+
+        graphData.values = _.map(_.range(data.length * 10), function (index) {
+          return {x: index/10, y: data[Math.floor(index/10)]};
+        });
+
+      } else {
+
+        graphData.values = _.map(data, function (value, index) {
+          return {x: index, y: value};
+        });
+
+      }
+
     } else {
       graphData = data;
     }
+
+    var xValues = _.map(graphData.values, function (value) {
+      return value.x;
+    });
 
     var yValues = _.map(graphData.values, function (value) {
       return value.y;
@@ -30,20 +47,23 @@ module.exports = React.createClass({
     var minY = Math.min.apply(Math, yValues);
     var maxY = Math.max.apply(Math, yValues);
 
+    var minX = Math.min.apply(Math, xValues);
+    var maxX = Math.max.apply(Math, xValues);
+
     return {
       graphData: graphData,
       dataSetLength: yValues.length,
       width: width,
       height: height,
-      yScale: d3.scale.linear().domain([minY, maxY]).range([height - 70, 0]),
-      xScale: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]),
-      xScaleBrush: d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70])
+      yScale: d3.scale.linear().domain([minY - 0.1, maxY  + 0.1]).range([height - 70, 0]),
+      xScale: d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70]),
+      xScaleBrush: d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70])
     };
   },
 
   componentWillReceiveProps: function (nextProps) {
 
-    var {data, width, height, xOffset} = nextProps;
+    var {data, width, height, xOffset, emulateBars} = nextProps;
 
     xOffset = xOffset ? xOffset : 0;
 
@@ -54,12 +74,28 @@ module.exports = React.createClass({
     var graphData = {};
 
     if (_.isArray(data)) {
-      graphData.values = _.map(data, function (value, index) {
-        return {x: index + xOffset, y: value};
-      });
+
+      if (emulateBars) {
+
+        graphData.values = _.map(_.range(data.length * 10), function (index) {
+          return {x: index/10, y: data[Math.floor(index/10)]};
+        });
+
+      } else {
+
+        graphData.values = _.map(data, function (value, index) {
+          return {x: index, y: value};
+        });
+
+      }
+
     } else {
       graphData = data;
     }
+
+    var xValues = _.map(graphData.values, function (value) {
+      return value.x;
+    });
 
     var yValues = _.map(graphData.values, function (value) {
       return value.y;
@@ -68,14 +104,17 @@ module.exports = React.createClass({
     var minY = Math.min.apply(Math, yValues);
     var maxY = Math.max.apply(Math, yValues);
 
-    var xScaleDomain = !_.isEmpty(previousExtent) ? previousExtent : [0, graphData.values.length];
+    var minX = Math.min.apply(Math, xValues);
+    var maxX = Math.max.apply(Math, xValues);
+
+    var xScaleDomain = !_.isEmpty(previousExtent) ? previousExtent : [minX - 0.1, maxX + 0.1];
     var xScale = d3.scale.linear().domain(xScaleDomain).range([0, width - 70]);
-    var xScaleBrush = d3.scale.linear().domain([0, graphData.values.length]).range([0, width - 70]);
-    var yScale = d3.scale.linear().domain([minY, maxY]).range([height - 70, 0]);
+    var xScaleBrush = d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70]);
+    var yScale = d3.scale.linear().domain([minY - 0.1, maxY  + 0.1]).range([height - 70, 0]);
 
     this.setState({
       graphData: graphData,
-      dataSetLength: yValues.length,
+      dataSetLength: yValues.length - 1,
       yScale: yScale,
       xScale: xScale,
       xScaleBrush: xScaleBrush
@@ -89,6 +128,7 @@ module.exports = React.createClass({
 
 
   render: function () {
+    var classes = classNames('brush', {hidden: this.props.withoutBrush});
     if (_.isEmpty(this.state.graphData.values)) {
       return (<div></div>);
     } else {
@@ -103,7 +143,7 @@ module.exports = React.createClass({
             yScale={this.state.yScale}
             />
 
-          <div className="brush" style={{float: 'none'}}>
+          <div className={classes} style={{float: 'none'}}>
             <Brush
               width={this.state.width}
               height={50}

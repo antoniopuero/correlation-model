@@ -9,19 +9,23 @@ var signalConst = require('../constants/signals');
 
 module.exports = (function () {
 
-  var firstRandomChain = [5, [2, 5]],
-    firstRandomSignal = signalConst.getRandomSignal(),
+  var firstChain = [5, [2, 5]],
+    firstSignal = [1, 0, 1, 1, 0],
     firstChainInAction = processTriggerChain(),
     secondRandomChain = [5, [3, 5]],
-    secondRandomSignal = signalConst.getRandomSignal(),
+    secondSignal = [1, 1, 0, 1, 0],
     secondChainInAction = processTriggerChain(),
+    carrier = signalHelpers.generateSin(10),
     firstRefSequence,
     secondRefSequence,
-    mixedSignal;
+    firstSignalOnCarrier,
+    secondSignalOnCarrier,
+    firstSignalWithSequence,
+    secondSignalWithSequence,
+    mixedSignal,
+    mixedSignalWithNoise;
 
-  console.log(firstRandomSignal, secondRandomSignal);
-
-  firstChainInAction.initChain.apply(firstChainInAction, firstRandomChain);
+  firstChainInAction.initChain.apply(firstChainInAction, firstChain);
   firstChainInAction.set();
   firstRefSequence = firstChainInAction.getSequence();
 
@@ -29,16 +33,36 @@ module.exports = (function () {
   secondChainInAction.set();
   secondRefSequence = secondChainInAction.getSequence();
 
+  firstSignalWithSequence = signalHelpers.mixSignalWithMSequence(firstSignal, firstRefSequence);
+  secondSignalWithSequence = signalHelpers.mixSignalWithMSequence(secondSignal, secondRefSequence);
+
+  firstSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstSignalWithSequence), carrier, carrier.length);
+
+  secondSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondSignalWithSequence), carrier, carrier.length);
+
+
 
   mixedSignal = signalHelpers.addSignals([
-    signalHelpers.mixSignalWithMSequence(firstRandomSignal, firstRefSequence),
-    signalHelpers.mixSignalWithMSequence(secondRandomSignal, secondRefSequence)
+    firstSignalOnCarrier,
+    secondSignalOnCarrier
   ]);
 
+  mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
+
+
+
   return flux.createStore({
-    triggerChain: firstRandomChain,
-    signal: mixedSignal,
-    correlation: [],
+    triggerChain: firstChain,
+    signal: firstSignal,
+    sequence: firstRefSequence,
+    signalWithSequence: firstSignalWithSequence,
+    carrier: carrier,
+    firstSignalOnCarrier: firstSignalOnCarrier,
+    secondSignalOnCarrier: secondSignalOnCarrier,
+    mixedSignal: mixedSignal,
+    mixedSignalWithNoise: _.flatten(mixedSignalWithNoise),
+    firstSignalCorrelation: signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length), true),
+    secondSignalCorrelation: signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length), true),
     actions: [
     ],
 
@@ -50,7 +74,36 @@ module.exports = (function () {
     },
 
     exports: {
-
+      getSignal: function () {
+        return this.signal;
+      },
+      getSequence: function () {
+        return this.sequence;
+      },
+      getSignalWithSequence: function () {
+        return this.signalWithSequence;
+      },
+      getCarrier: function () {
+        return this.carrier;
+      },
+      getFirstSignalOnCarrier: function () {
+       return this.firstSignalOnCarrier;
+      },
+      getSecondSignalOnCarrier: function () {
+       return this.secondSignalOnCarrier;
+      },
+      getCommonChannelSignal: function () {
+        return this.mixedSignal;
+      },
+      getCommonChannelSignalWithNoise: function () {
+        return this.mixedSignalWithNoise;
+      },
+      getFirstSignalCorrelation: function () {
+        return this.firstSignalCorrelation;
+      },
+      getSecondSignalCorrelation: function () {
+        return this.secondSignalCorrelation;
+      }
     }
   });
 })();

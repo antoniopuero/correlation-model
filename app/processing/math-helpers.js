@@ -11,8 +11,13 @@ module.exports = {
       return result * val;
     });
   },
-  add: function (val1, val2) {
-    return val1 + val2;
+  add: function (values) {
+    return _.reduce(values, function (result, val) {
+      return result + val;
+    });
+  },
+  average: function (values) {
+    return values.length ? this.add(values) / values.length : 0;
   },
   sign: function (x) {
     return x ? x < 0 ? -1 : 1 : 0;
