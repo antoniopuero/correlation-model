@@ -32,5 +32,6 @@
     "react-d3-components": "^0.4.7",
     "react-router": "^0.13.3"
   },
-  "vendorStyles": ["./node_modules/bootstrap/dist/css/bootstrap.min.css"]
+  "vendorStyles": ["./node_modules/bootstrap/dist/css/bootstrap.min.css"],
+  "vendorAssets": [{"files": "./node_modules/bootstrap/dist/fonts/*", "dest": "/fonts"}]
 }

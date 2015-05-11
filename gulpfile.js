@@ -145,7 +145,12 @@ var cssTask = function (options) {
         .pipe(cssmin())
         .pipe(gulp.dest(options.dest));   
     }
-}
+};
+
+var assetsTask = function (options) {
+  gulp.src(options.src)
+    .pipe(gulp.dest(options.dest));
+};
 
 // Starts our development workflow
 gulp.task('default', function () {
@@ -159,7 +164,17 @@ gulp.task('default', function () {
   cssTask({
     development: true,
     src: ['./app/**/*.less'].concat(packageFile.vendorStyles),
-    dest: './build'
+    dest: './build/css'
+  });
+
+  _.each(packageFile.vendorAssets, function (asset) {
+
+    assetsTask({
+      development: true,
+      src: asset.files,
+      dest: './build' + asset.dest
+    });
+
   });
 
 });
@@ -175,7 +190,18 @@ gulp.task('deploy', function () {
   cssTask({
     development: false,
     src: ['./app/**/*.less'].concat(packageFile.vendorStyles),
-    dest: './dist'
+    dest: './dist/css'
+  });
+
+
+  _.each(packageFile.vendorAssets, function (asset) {
+
+    assetsTask({
+      development: true,
+      src: asset.files,
+      dest: './dist' + asset.dest
+    });
+
   });
 
 });

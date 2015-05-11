@@ -13,7 +13,7 @@ module.exports = React.createClass({
 
     return (
       <div className="input-field">
-        <input type="text" onChange={this.changeWrapper} value={value}/>
+        <input type="text" className="form-control" onChange={this.changeWrapper} value={value}/>
       </div>
     );
   }

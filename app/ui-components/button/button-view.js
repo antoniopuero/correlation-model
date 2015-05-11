@@ -7,7 +7,7 @@ module.exports = React.createClass({
     var {name, handler} = this.props;
 
     return (
-      <button className="btn btn-default" onClick={handler}>{name}</button>
+      <button className="btn btn-default btn-lg" onClick={handler}>{name}</button>
     );
   }
 
