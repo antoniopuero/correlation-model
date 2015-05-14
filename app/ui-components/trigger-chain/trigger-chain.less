@@ -1,5 +1,56 @@
-.trigger-chain {
-  display: table;
-  width: 100%;
-  border-spacing: 15px;
+.trigger-chain-wrapper {
+  position: relative;
+  text-align: center;
+
+  .feedback-line {
+    display: inline-block;
+    position: absolute;
+    height: 150px;
+    left: 8%;
+    top: 54px;
+    width: 5%;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+
+  .trigger-chain {
+    display: table;
+    width: 100%;
+    border-spacing: 15px;
+    margin-bottom: 70px;
+  }
+
+  .xor-wrapper {
+    display: inline-block;
+    width: 83%;
+    position: relative;
+    border-bottom: 1px solid black;
+
+    .xor {
+      display: inline-block;
+      position: absolute;
+      top: -19px;
+      background: white;
+      width: 40px;
+      height: 40px;
+      border: 1px solid black;
+      border-radius: 20px;
+      font-size: 40px;
+      line-height: 33px;
+      vertical-align: middle;
+      font-weight: bold;
+    }
+
+    .white-holder {
+      display: inline-block;
+      position: absolute;
+      background: white;
+      width: 21%;
+      height: 4px;
+      top: -2px;
+      right: -7%;
+    }
+  }
+
 }

@@ -16,4 +16,25 @@
     bottom: 8px;
     right: 5px;
   }
+
+  .checkbox {
+    position: absolute;
+    bottom: -94px;
+    height: 80px;
+
+    .line-through {
+      display: none;
+      position: absolute;
+      left: 22px;
+      bottom: -15px;
+      height: 100%;
+      border-left: 1px solid black;
+    }
+
+    &.checked {
+      .line-through {
+        display: inline-block;
+      }
+    }
+  }
 }

@@ -40,14 +40,21 @@ module.exports = React.createClass({
       value = 0;
     }
     return (
-        <TriggerEntity value={value} number={index + 1} inFeedback={isInFeedback}/>
+      <TriggerEntity value={value} number={index + 1} inFeedback={isInFeedback}/>
     );
   },
 
   render: function () {
     return (
-      <div className="row trigger-chain">
-        {_.map(this.state.triggerValues, this.renderTrigger)}
+      <div className="trigger-chain-wrapper">
+        <span className="feedback-line"></span>
+        <div className="row trigger-chain">
+          {_.map(this.state.triggerValues, this.renderTrigger)}
+        </div>
+        <div className="xor-wrapper">
+          <span className="xor">+</span>
+          <div className="white-holder"></div>
+        </div>
       </div>
     );
   }

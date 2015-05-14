@@ -84,7 +84,7 @@ module.exports = {
     noiseAmplitude = noiseAmplitude ? noiseAmplitude : Math.max.apply(Math, signal);
     return _.map(signal, function (value, index) {
       return _.map(_.range(Math.ceil(Math.random() * 3)), function () {
-        return value + Math.random() * noiseAmplitude;
+        return value + _.random(-noiseAmplitude/2, noiseAmplitude/2, true);
       });
     });
   },

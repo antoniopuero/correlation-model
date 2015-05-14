@@ -49,6 +49,10 @@ module.exports = (function () {
 
   mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
 
+  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length), true), carrier);
+
+  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length), true), carrier);
+
 
 
   return flux.createStore({
@@ -61,8 +65,8 @@ module.exports = (function () {
     secondSignalOnCarrier: secondSignalOnCarrier,
     mixedSignal: mixedSignal,
     mixedSignalWithNoise: _.flatten(mixedSignalWithNoise),
-    firstSignalCorrelation: signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length), true),
-    secondSignalCorrelation: signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length), true),
+    firstSignalCorrelation: firstSignalCorrelation,
+    secondSignalCorrelation: secondSignalCorrelation,
     actions: [
     ],
 

@@ -38,8 +38,8 @@ module.exports = (function () {
   dynamicChain.set();
 
   mixedSignal = signalHelpers.addSignals([
-    signalHelpers.mixSignalWithMSequence(firstRandomSignal, firstRefSequence),
-    signalHelpers.mixSignalWithMSequence(secondRandomSignal, secondRefSequence)
+    signalHelpers.transformBinaryData(signalHelpers.mixSignalWithMSequence(firstRandomSignal, firstRefSequence)),
+    signalHelpers.transformBinaryData(signalHelpers.mixSignalWithMSequence(secondRandomSignal, secondRefSequence))
   ]);
 
   return flux.createStore({
@@ -79,7 +79,7 @@ module.exports = (function () {
     calculateCorrelation: function () {
       if (this.sequence.length) {
         this.isMSequence = signalHelpers.isMSequence(this.sequence);
-        this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
+        this.correlation = signalHelpers.correlation(mixedSignal, signalHelpers.transformBinaryData(this.sequence));
       }
     },
 
