@@ -15,6 +15,7 @@ var glob = require('glob');
 var livereload = require('gulp-livereload');
 var jasminePhantomJs = require('gulp-jasmine2-phantomjs');
 var less = require('gulp-less');
+var nodemon = require('gulp-nodemon');
 var packageFile = require('./package.json');
 
 // External dependencies you do not want to rebundle while developing,
@@ -208,4 +209,12 @@ gulp.task('deploy', function () {
 
 gulp.task('test', function () {
     return gulp.src('./build/testrunner-phantomjs.html').pipe(jasminePhantomJs());
+});
+
+gulp.task('serve', ['default'], function () {
+  nodemon({
+    script: 'app.js'
+    , ext: 'js jade'
+    , env: { 'NODE_ENV': 'development' }
+  })
 });

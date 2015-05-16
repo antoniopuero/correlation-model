@@ -47,6 +47,12 @@ module.exports = {
     });
   },
 
+  generateCos: function (cosStep) {
+    return _.map(_.range(0, 360, cosStep), function (value) {
+      return Math.cos(Math.PI / 180 * value);
+    });
+  },
+
   addSignals: function (signals) {
     var maxSignalLength = Math.max.apply(Math, _.map(signals, function (signal) {
       return signal.length;

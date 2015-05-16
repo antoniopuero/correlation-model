@@ -15,6 +15,7 @@
     "gulp-jasmine2-phantomjs": "^0.1.1",
     "gulp-less": "^3.0.2",
     "gulp-livereload": "^2.1.1",
+    "gulp-nodemon": "^2.0.3",
     "gulp-notify": "^1.4.2",
     "gulp-shell": "^0.2.10",
     "gulp-util": "^3.0.0",
@@ -24,14 +25,28 @@
     "watchify": "^2.1.1"
   },
   "dependencies": {
+    "body-parser": "^1.12.4",
     "bootstrap": "^3.3.4",
     "classnames": "^1.2.0",
+    "express": "^4.12.3",
+    "express-session": "^1.11.2",
     "flux-react": "^2.6.0",
+    "jade": "^1.9.2",
+    "jquery": "^2.1.4",
     "lodash": "^3.6.0",
+    "mongoose": "^4.0.3",
+    "pwd": "0.0.4",
     "react": "0.13.1",
     "react-d3-components": "^0.4.7",
     "react-router": "^0.13.3"
   },
-  "vendorStyles": ["./node_modules/bootstrap/dist/css/bootstrap.min.css"],
-  "vendorAssets": [{"files": "./node_modules/bootstrap/dist/fonts/*", "dest": "/fonts"}]
+  "vendorStyles": [
+    "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+  ],
+  "vendorAssets": [
+    {
+      "files": "./node_modules/bootstrap/dist/fonts/*",
+      "dest": "/fonts"
+    }
+  ]
 }

@@ -1,16 +1,17 @@
 var React = require('react');
 var Store = require('../../stores/cdma-store');
+var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/cdma-actions');
 var Button = require('../../ui-components/button/button-view');
 var LinearGraph = require('../../ui-components/linear-graph/linear-graph-view');
 var classNames = require('classnames');
-var texts = require('../../constants/texts');
 
 module.exports = React.createClass({
   getInitialState: function () {
     return {
       commonChannelSignal: Store.getCommonChannelSignal(),
-      commonChannelSignalWithNoise: Store.getCommonChannelSignalWithNoise()
+      commonChannelSignalWithNoise: Store.getCommonChannelSignalWithNoise(),
+      texts: MainStore.getTexts()
     };
   },
   componentWillMount: function () {
@@ -27,9 +28,8 @@ module.exports = React.createClass({
   },
 
   render: function () {
-    var self = this;
 
-    var {commonChannelSignal, commonChannelSignalWithNoise} = this.state;
+    var {commonChannelSignal, commonChannelSignalWithNoise, texts} = this.state;
 
     return (
       <div className="common-channel-with-noise-container">

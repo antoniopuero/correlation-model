@@ -46,5 +46,11 @@ module.exports = {
     mainHeader: 'Кореляційний прийом сигналу',
     nextButton: 'Далі',
     prevButton: 'Назад'
+  },
+  loginPage: {
+    headerText: 'Ваші дані',
+    userName: 'Введіть, будь-ласка, своє ім\'я',
+    userPassword: 'Введіть, будь-ласка, пароль',
+    start: 'Розпочати'
   }
 };

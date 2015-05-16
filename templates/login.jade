@@ -1,0 +1,12 @@
+extends ./common/header
+
+block content
+  div.container-fluid
+    form.form-signin(action="/login" method="POST")
+      p.error #{session.error}
+      h2.form-signin-heading #{texts.loginPage.headerText}
+      label.sr-only(for="userName") #{texts.loginPage.userName}
+      input#userName.form-control(type="text" autofocus="" name="userName")
+      label.sr-only(for="userPassword") #{texts.loginPage.userPassword}
+      input#userPassword.form-control(type="password" name="userPassword" required="")
+      button.btn.btn-lg.btn-primary.btn-block(type="submit") #{texts.loginPage.start}

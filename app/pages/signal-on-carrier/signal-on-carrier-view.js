@@ -1,17 +1,18 @@
 var React = require('react');
 var Store = require('../../stores/cdma-store');
+var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/cdma-actions');
 var Button = require('../../ui-components/button/button-view');
 var LinearGraph = require('../../ui-components/linear-graph/linear-graph-view');
 var classNames = require('classnames');
-var texts = require('../../constants/texts');
 
 module.exports = React.createClass({
   getInitialState: function () {
     return {
       signalWithSequence: Store.getSignalWithSequence(),
       carrier: Store.getCarrier(),
-      signalOnCarrier: Store.getFirstSignalOnCarrier()
+      signalOnCarrier: Store.getFirstSignalOnCarrier(),
+      texts: MainStore.getTexts()
     };
   },
   componentWillMount: function () {
@@ -31,7 +32,7 @@ module.exports = React.createClass({
   render: function () {
     var self = this;
 
-    var {signalWithSequence, signalOnCarrier, carrier} = this.state;
+    var {signalWithSequence, signalOnCarrier, carrier, texts} = this.state;
 
     return (
       <div className="signal-on-carrier-container">

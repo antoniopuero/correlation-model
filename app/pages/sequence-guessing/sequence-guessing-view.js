@@ -1,5 +1,6 @@
 var React = require('react');
 var Store = require('../../stores/guessing-store');
+var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/guessing-actions');
 var TriggerChain = require('../../ui-components/trigger-chain/trigger-chain-view');
 var Button = require('../../ui-components/button/button-view');
@@ -22,6 +23,7 @@ module.exports = React.createClass({
       hiddenButtons: Store.getHidden(),
       userInputSignals: Store.getUserInputSignals(),
       signalCorrectnessArray: Store.getSignalCorrectnessArray(),
+      texts: MainStore.getTexts()
     };
   },
   componentWillMount: function () {
@@ -65,7 +67,7 @@ module.exports = React.createClass({
       'hidden': self.state.hiddenButtons
     });
 
-    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray} = this.state;
+    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray, texts} = this.state;
 
     return (
       <div className="sequence-guessing-container">
