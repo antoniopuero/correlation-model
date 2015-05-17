@@ -23,6 +23,7 @@ module.exports = React.createClass({
       hiddenButtons: Store.getHidden(),
       userInputSignals: Store.getUserInputSignals(),
       signalCorrectnessArray: Store.getSignalCorrectnessArray(),
+      allSignalsAreCorrect: Store.allSignalsAreCorrect(),
       texts: MainStore.getTexts()
     };
   },
@@ -41,7 +42,8 @@ module.exports = React.createClass({
       hiddenButtons: Store.getHidden(),
       correlation: Store.getCorrelation(),
       userInputSignals: Store.getUserInputSignals(),
-      signalCorrectnessArray: Store.getSignalCorrectnessArray()
+      signalCorrectnessArray: Store.getSignalCorrectnessArray(),
+      allSignalsAreCorrect: Store.allSignalsAreCorrect()
     }, this.state);
     this.setState(stateDiff);
   },
@@ -67,10 +69,17 @@ module.exports = React.createClass({
       'hidden': self.state.hiddenButtons
     });
 
+    var correct = classNames({
+      'hidden': !self.state.allSignalsAreCorrect
+    });
+
     var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray, texts} = this.state;
 
     return (
       <div className="sequence-guessing-container">
+
+        <LinearGraph data={signal} width={800} height={400}/>
+
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId}/>
         <div className={classes}>{sequence.join('')}</div>
         <Button name="Init chain with feedback" handler={this.initSequence}/>
@@ -80,8 +89,11 @@ module.exports = React.createClass({
         </div>
 
         <LinearGraph data={correlation} xOffset={50} width={800} height={400}/>
-        <LinearGraph data={signal} width={800} height={400}/>
         <InputSection userInputSignals={userInputSignals} signalCorrectnessArray={signalCorrectnessArray}/>
+
+        <form action="/finished" method="POST" className={correct}>
+          <button type="submit" className="btn btn-primary btn-lg">{texts.commonTexts.finishButton}</button>
+        </form>
 
       </div>
     );

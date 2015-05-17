@@ -6,5 +6,10 @@ html
     nav.navbar.navbar-default
       div.container-fluid
         div.navbar-header
-          a.navbar-brand(href="#") #{texts.commonTexts.mainHeader}
+          a.navbar-brand(href="/") #{texts.commonTexts.mainHeader}
+        - if (session.user) {
+          ul.nav.navbar-nav.navbar-right
+            li
+              a #{session.user.firstName} #{session.user.lastName}
+        - }
     block content

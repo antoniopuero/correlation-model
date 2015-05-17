@@ -188,6 +188,11 @@ module.exports = (function () {
       },
       getSignalCorrectnessArray: function () {
         return this.signalCorrectnessArray;
+      },
+      allSignalsAreCorrect: function () {
+        return _.reduce(this.signalCorrectnessArray, function (acc, correct) {
+          return acc && correct;
+        }, true);
       }
     }
   });

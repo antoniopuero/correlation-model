@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/correlation");
 var userSchema = new mongoose.Schema({
-  username: String,
+  firstName: String,
+  lastName: String,
+  admin: Boolean,
+  done: Boolean,
   salt: String,
   hash: String
 });

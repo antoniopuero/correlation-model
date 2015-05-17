@@ -45,12 +45,27 @@ module.exports = {
   commonTexts: {
     mainHeader: 'Кореляційний прийом сигналу',
     nextButton: 'Далі',
-    prevButton: 'Назад'
+    prevButton: 'Назад',
+    finishButton: 'Завершити',
+    finished: 'Завершено'
+  },
+  commonErrors: {
+    thereIsNoSuchUser: 'Вибачте, в системі не існує такого коричтувача',
+    invalidPassword: 'Ви ввели невірний пароль',
+    accessDenied: 'Доступ заборонено'
   },
   loginPage: {
     headerText: 'Ваші дані',
-    userName: 'Введіть, будь-ласка, своє ім\'я',
+    firstName: 'Введіть, будь-ласка, своє ім\'я',
+    userName: 'Введіть, будь-ласка, своє прізвище',
     userPassword: 'Введіть, будь-ласка, пароль',
     start: 'Розпочати'
+  },
+  adminTable: {
+    firstName: 'Ім\'я',
+    lastName: 'Прізвище',
+    isFinished: 'Чи виконано',
+    done: 'Виконано',
+    inProgress: 'В процессі'
   }
 };

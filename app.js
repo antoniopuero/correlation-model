@@ -2,6 +2,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var app = express();
+var _ = require('lodash');
 var texts = require('./texts');
 var pwd = require('pwd');
 var db = require('./server-app/user-model');
@@ -24,23 +25,16 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(function (req, res, next) {
-  if (req.session) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-});
 app.use(express.static('build'));
 
 
-function authenticate(name, pass, fn) {
-  db.User.findOne({username: name}, function (err, user) {
-    if (!user) return fn(new Error('cannot find user'));
+function authenticate(firstName, lastName, pass, fn) {
+  db.User.findOne({firstName: firstName, lastName: lastName}, function (err, user) {
+    if (!user) return fn(new Error(texts.commonErrors.thereIsNoSuchUser));
     pwd.hash(pass, user.salt, function (err, hash) {
       if (err) return fn(err);
       if (hash == user.hash) return fn(null, user);
-      fn(new Error('invalid password'));
+      fn(new Error(texts.commonErrors.invalidPassword));
     })
   })
 }
@@ -50,7 +44,16 @@ function restrict(req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    req.session.error = 'Access denied!';
+    req.session.error = texts.commonErrors.accessDenied;
+    res.redirect('/login');
+  }
+}
+
+function adminRestrict (req, res, next) {
+  if (req.session.user.admin) {
+    next();
+  } else {
+    req.session.error = texts.commonErrors.accessDenied;
     res.redirect('/login');
   }
 }
@@ -58,20 +61,38 @@ function restrict(req, res, next) {
 //router
 
 app.get('/', restrict, function (req, res) {
-  res.render('index', {texts: texts, session: session});
+  res.render('index', {texts: texts, session: req.session});
 });
 
 app.get('/login', function (req, res) {
-  res.render('login', {texts: texts, session: session});
+  res.render('login', {texts: texts, session: req.session});
+});
+
+app.get('/finished', function (req, res) {
+  res.render('finish', {texts: texts, session: req.session});
+});
+
+
+app.get('/admin', restrict, adminRestrict, function (req, res) {
+  db.User.find({}, function (err, users) {
+    var filteredUsers = _.filter(users, function (user) {
+      return user.firstName && user.firstName !== 'admin';
+    });
+    res.render('admin', {texts: texts, session: req.session, users: filteredUsers});
+  });
 });
 
 
 app.post('/login', function (req, res) {
-  authenticate(req.body.userName, req.body.userPassword, function (err, user) {
+  authenticate(req.body.firstName, req.body.lastName, req.body.userPassword, function (err, user) {
     if (user) {
       req.session.regenerate(function () {
         req.session.user = user;
-        res.redirect('/');
+        if (user.admin) {
+          res.redirect('/admin');
+        } else {
+          res.redirect('/');
+        }
       });
     } else {
       console.log(err);
@@ -82,7 +103,8 @@ app.post('/login', function (req, res) {
         }
 
         var user = new db.User({
-          username: req.body.userName,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
           salt: salt,
           hash: hash
         });
@@ -98,6 +120,22 @@ app.post('/login', function (req, res) {
         });
       });
     }
+  });
+});
+
+app.post('/finished', function (req, res) {
+  db.User.findOne({firstName: req.session.user.firstName, lastName: req.session.user.lastName}, function (err, user) {
+    user.done = true;
+    user.save(function (err) {
+
+      if (err) {
+        console.log(err);
+      } else {
+        req.session.unset = 'destroy';
+        res.redirect('/finished');
+      }
+
+    })
   });
 });
 
