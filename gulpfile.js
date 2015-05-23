@@ -142,7 +142,6 @@ var cssTask = function (options) {
     } else {
       gulp.src(options.src)
         .pipe(concat('main.css'))
-        .pipe(cssmin())
         .pipe(gulp.dest(options.dest));   
     }
 };
