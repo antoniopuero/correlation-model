@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(process.env.ENV === 'PRODUCTION' ? express.static('dist') : express.static('build'));
+app.use(process.env.LOCAL_ENV === 'production' ? express.static('dist') : express.static('build'));
 
 
 function authenticate(firstName, lastName, pass, fn) {
@@ -64,7 +64,7 @@ function adminRestrict (req, res, next) {
 //router
 
 app.get('/', restrict, function (req, res) {
-  res.render('index', {texts: texts, session: req.session, prod: process.env.ENV === 'PRODUCTION'});
+  res.render('index', {texts: texts, session: req.session, prod: process.env.LOCAL_ENV === 'production'});
 });
 
 app.get('/login', function (req, res) {
