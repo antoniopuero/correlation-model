@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "host": "mongodb://localhost:27017/correlation"
+  },
+  "prod": {
+    "user": "",
+    "password": "",
+    "host": "ds031882.mongolab.com:31882/correlation"
+  }
+}

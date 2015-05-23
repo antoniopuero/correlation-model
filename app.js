@@ -5,7 +5,8 @@ var app = express();
 var _ = require('lodash');
 var texts = require('./texts');
 var pwd = require('pwd');
-var db = require('./server-app/user-model');
+var dbConfig = require('./db-config.json');
+var db = require('./server-app/user-model')(dbConfig.prod);
 
 
 app.set('views', './templates');
