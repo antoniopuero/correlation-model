@@ -141,8 +141,9 @@ var cssTask = function (options) {
       gulp.watch(options.src, run);
     } else {
       gulp.src(options.src)
+        .pipe(less())
         .pipe(concat('main.css'))
-        .pipe(gulp.dest(options.dest));   
+        .pipe(gulp.dest(options.dest));
     }
 };
 
