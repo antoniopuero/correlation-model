@@ -4,6 +4,7 @@ var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/cdma-actions');
 var Button = require('../../ui-components/button/button-view');
 var LinearGraph = require('../../ui-components/linear-graph/linear-graph-view');
+var PrincipalSchema = require('../../ui-components/principal-schema/principal-schema-view');
 var classNames = require('classnames');
 
 module.exports = React.createClass({
@@ -38,6 +39,9 @@ module.exports = React.createClass({
       <div className="signal-on-carrier-container">
         <h2>{texts.signalOnCarrier.heading}</h2>
         <p>{texts.signalOnCarrier.introPart}</p>
+
+        <PrincipalSchema highlighted={['carrier-generator', 'multiply', 'xor']}/>
+
         <LinearGraph data={signalWithSequence} width={800} height={400} emulateBars={true}/>
         <p className="text-center">{texts.signalOnCarrier.signalWithSequenceCapture}</p>
         <p>{texts.signalOnCarrier.aboutCarrying}</p>

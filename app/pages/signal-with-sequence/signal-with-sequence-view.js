@@ -4,6 +4,7 @@ var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/cdma-actions');
 var Button = require('../../ui-components/button/button-view');
 var LinearGraph = require('../../ui-components/linear-graph/linear-graph-view');
+var PrincipalSchema = require('../../ui-components/principal-schema/principal-schema-view');
 var classNames = require('classnames');
 
 module.exports = React.createClass({
@@ -38,6 +39,7 @@ module.exports = React.createClass({
       <div className="signal-with-sequence-container">
         <h2>{texts.signalWithSequence.heading}</h2>
         <p>{texts.signalWithSequence.introPart}</p>
+        <PrincipalSchema highlighted={['data-generator', 'prn-generator', 'xor']}/>
         <LinearGraph data={signal} width={800} height={400} withoutBrush={true} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.signalCapture}</p>
         <p>{texts.signalWithSequence.aboutPRNCode}</p>
