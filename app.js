@@ -12,6 +12,8 @@ var db = require('./server-app/user-model')(dbConfig.prod);
 app.set('views', './templates');
 app.set('view engine', 'jade');
 
+app.set('port', (process.env.PORT || 3000));
+
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -146,11 +148,9 @@ app.get('/texts', function (req, res) {
 });
 
 
-var server = app.listen(3000, function () {
+var server = app.listen(app.get('port'), function () {
 
-  var host = server.address().address;
-  var port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Example app listening at %s', app.get('port'));
 
 });
