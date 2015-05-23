@@ -3,8 +3,8 @@
     "host": "mongodb://localhost:27017/correlation"
   },
   "prod": {
-    "user": "",
-    "password": "",
+    "user": "dbuser",
+    "password": "19snuss92",
     "host": "ds031882.mongolab.com:31882/correlation"
   }
 }
