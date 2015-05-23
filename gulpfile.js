@@ -10,7 +10,6 @@ var notify = require('gulp-notify');
 var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
 var gutil = require('gulp-util');
-var shell = require('gulp-shell');
 var glob = require('glob');
 var livereload = require('gulp-livereload');
 var jasminePhantomJs = require('gulp-jasmine2-phantomjs');
@@ -178,9 +177,15 @@ gulp.task('default', function () {
 
   });
 
+  assetsTask({
+    development: true,
+    src: './app/assets/*',
+    dest: './build/assets'
+  })
+
 });
 
-gulp.task('deploy', function () {
+gulp.task('prod', function () {
 
   browserifyTask({
     development: false,
@@ -198,10 +203,17 @@ gulp.task('deploy', function () {
   _.each(packageFile.vendorAssets, function (asset) {
 
     assetsTask({
-      development: true,
+      development: false,
       src: asset.files,
       dest: './dist' + asset.dest
     });
+
+
+    assetsTask({
+      development: false,
+      src: './app/assets/*',
+      dest: './dist/assets'
+    })
 
   });
 
