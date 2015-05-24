@@ -5,10 +5,17 @@ block content
     form.form-signin(action="/login" method="POST")
       p.error #{session.error}
       h2.form-signin-heading #{texts.loginPage.headerText}
+
+      label(for="firstName") #{texts.loginPage.groupName}
+      input#firstName.form-control(type="text" autofocus="" name="groupName")
+
       label(for="firstName") #{texts.loginPage.firstName}
       input#firstName.form-control(type="text" autofocus="" name="firstName")
+
       label(for="lastName") #{texts.loginPage.lastName}
       input#lastName.form-control(type="text" autofocus="" name="lastName")
+
       label(for="userPassword") #{texts.loginPage.userPassword}
       input#userPassword.form-control(type="password" name="userPassword" required="")
+
       button.btn.btn-lg.btn-primary.btn-block(type="submit") #{texts.loginPage.start}

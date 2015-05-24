@@ -1,23 +1,9 @@
 extends ./common/header
 block content
   div.container-fluid
-    table.table.table-hover
-      thead
-        tr
-          th #
-          th #{texts.adminTable.firstName}
-          th #{texts.adminTable.lastName}
-          th #{texts.adminTable.isFinished}
-
-      tbody
-        - for (var i = 0, max = users.length; i < max; i += 1) {
-          tr
-            td #{i}
-            td #{users[i].firstName}
-            td #{users[i].lastName}
-            td
-              if users[i].done
-                | #{texts.adminTable.done}
-              else
-                | #{texts.adminTable.inProgress}
-        - }
+    h3 #{texts.adminTable.selectTheGroup}
+    ul
+      - for (var i = 0, max = groups.length; i < max; i += 1) {
+        li
+          a(href="/admin/group/" + groups[i]) #{groups[i]}
+      - }

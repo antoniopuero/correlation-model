@@ -31,8 +31,8 @@ app.use(bodyParser.urlencoded({
 app.use(process.env.LOCAL_ENV === 'production' ? express.static('dist') : express.static('build'));
 
 
-function authenticate(firstName, lastName, pass, fn) {
-  db.User.findOne({firstName: firstName, lastName: lastName}, function (err, user) {
+function authenticate(firstName, lastName, groupName, pass, fn) {
+  db.User.findOne({firstName: firstName, lastName: lastName, groupName: groupName}, function (err, user) {
     if (!user) return fn(new Error(texts.commonErrors.thereIsNoSuchUser));
     pwd.hash(pass, user.salt, function (err, hash) {
       if (err) return fn(err);
@@ -77,17 +77,38 @@ app.get('/finished', function (req, res) {
 
 
 app.get('/admin', restrict, adminRestrict, function (req, res) {
-  db.User.find({}, function (err, users) {
+  db.User.find().distinct('groupName', function (err, groups) {
+    var filteredGroups = _.filter(groups, function (group) {
+      return group && group !== 'admin';
+    });
+    res.render('admin', {texts: texts, session: req.session, groups: filteredGroups});
+  });
+});
+
+app.get('/admin/group/:groupName', restrict, adminRestrict, function (req, res) {
+  db.User.find({groupName: req.params.groupName}, function (err, users) {
     var filteredUsers = _.filter(users, function (user) {
       return user.firstName && user.firstName !== 'admin';
     });
-    res.render('admin', {texts: texts, session: req.session, users: filteredUsers});
+    res.render('group', {texts: texts, session: req.session, users: filteredUsers, groupName: req.params.groupName});
+  });
+});
+
+app.post('/admin/group/:groupName/delete', restrict, adminRestrict, function (req, res) {
+  db.User.find({group: req.params.groupName}).remove(function (err, users) {
+    res.redirect('/admin');
+  });
+});
+
+app.post('/admin/user/delete', restrict, adminRestrict, function (req, res) {
+  db.User.find({firstName: req.body.firstName, hash: req.body.hash}).remove(function (err, users) {
+    res.redirect('/admin/group/' + req.body.groupName);
   });
 });
 
 
 app.post('/login', function (req, res) {
-  authenticate(req.body.firstName, req.body.lastName, req.body.userPassword, function (err, user) {
+  authenticate(req.body.firstName, req.body.lastName, req.body.groupName, req.body.userPassword, function (err, user) {
     if (user) {
       req.session.regenerate(function () {
         req.session.user = user;
@@ -108,6 +129,7 @@ app.post('/login', function (req, res) {
         var user = new db.User({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
+          groupName: req.body.groupName,
           salt: salt,
           hash: hash
         });
@@ -127,15 +149,17 @@ app.post('/login', function (req, res) {
 });
 
 app.post('/finished', function (req, res) {
-  db.User.findOne({firstName: req.session.user.firstName, lastName: req.session.user.lastName}, function (err, user) {
+  var session = req.session;
+  db.User.findOne({firstName: session.user.firstName, lastName: session.user.lastName, groupName: session.user.groupName}, function (err, user) {
     user.done = true;
     user.save(function (err) {
 
       if (err) {
         console.log(err);
       } else {
-        req.session.unset = 'destroy';
-        res.redirect('/finished');
+        req.session.destroy(function (err) {
+          res.redirect('/finished');
+        });
       }
 
     })

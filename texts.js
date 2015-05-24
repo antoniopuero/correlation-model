@@ -56,16 +56,21 @@ module.exports = {
   },
   loginPage: {
     headerText: 'Ваші дані',
-    firstName: 'Введіть, будь-ласка, своє ім\'я',
-    lastName: 'Введіть, будь-ласка, своє прізвище',
-    userPassword: 'Введіть, будь-ласка, пароль',
+    groupName: 'Введіть, будь ласка, назву групи (Її має сказати керівник)',
+    firstName: 'Введіть, будь ласка, своє ім\'я',
+    lastName: 'Введіть, будь ласка, своє прізвище',
+    userPassword: 'Введіть, будь ласка, пароль',
     start: 'Розпочати'
   },
   adminTable: {
+    selectTheGroup: 'Оберіть группу',
     firstName: 'Ім\'я',
     lastName: 'Прізвище',
     isFinished: 'Чи виконано',
     done: 'Виконано',
-    inProgress: 'В процессі'
+    inProgress: 'В процессі',
+    deleteGroup: 'Видалити групу',
+    deleteUser: 'Видалити користувача',
+    delete: 'Видалити'
   }
 };

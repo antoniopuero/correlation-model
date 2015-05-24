@@ -13,6 +13,7 @@ module.exports = function (dbConfig) {
     lastName: String,
     admin: Boolean,
     done: Boolean,
+    groupName: String,
     salt: String,
     hash: String
   });

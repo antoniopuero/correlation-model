@@ -1,0 +1,32 @@
+extends ./common/header
+block content
+  div.container-fluid
+    table.table.table-hover
+      thead
+        tr
+          th #
+          th #{texts.adminTable.firstName}
+          th #{texts.adminTable.lastName}
+          th #{texts.adminTable.isFinished}
+          th #{texts.adminTable.deleteUser}
+      tbody
+        - for (var i = 0, max = users.length; i < max; i += 1) {
+          tr
+            td #{i}
+            td #{users[i].firstName}
+            td #{users[i].lastName}
+            td
+              if users[i].done
+                | #{texts.adminTable.done}
+              else
+                | #{texts.adminTable.inProgress}
+            td
+              form(action='/admin/user/delete', method="POST")
+                input(type="hidden" name="hash" value=users[i].hash)
+                input(type="hidden" name="firstName" value=users[i].firstName)
+                input(type="hidden" name="groupName" value=groupName)
+                button.btn.btn-lg.btn-danger(type="submit") #{texts.adminTable.delete}
+        - }
+
+    form(action='/admin/group/' + groupName + '/delete', method="POST")
+      button.btn.btn-lg.btn-danger(type="submit") #{texts.adminTable.deleteGroup}
