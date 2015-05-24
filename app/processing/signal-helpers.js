@@ -41,15 +41,17 @@ module.exports = {
     return syncronize.sync(signal, mSequence, mSequence.length * numberOfMSeqs, mathHelpers.xor);
   },
 
-  generateSin: function (sinStep) {
+  generateSin: function (sinStep, phase) {
+    phase = phase ? phase : 0;
     return _.map(_.range(0, 360, sinStep), function (value) {
-      return Math.sin(Math.PI / 180 * value);
+      return Math.sin(Math.PI / 180 * (value + phase));
     });
   },
 
-  generateCos: function (cosStep) {
+  generateCos: function (cosStep, phase) {
+    phase = phase ? phase : 0;
     return _.map(_.range(0, 360, cosStep), function (value) {
-      return Math.cos(Math.PI / 180 * value);
+      return Math.cos(Math.PI / 180 * (value + phase));
     });
   },
 
@@ -89,9 +91,9 @@ module.exports = {
   addRandomNoise: function (signal, noiseAmplitude) {
     noiseAmplitude = noiseAmplitude ? noiseAmplitude : Math.max.apply(Math, signal);
     return _.map(signal, function (value, index) {
-      return _.map(_.range(Math.ceil(Math.random() * 3)), function () {
+      //return _.map(_.range(Math.ceil(Math.random() * 3)), function () {
         return value + _.random(-noiseAmplitude/2, noiseAmplitude/2, true);
-      });
+      //});
     });
   },
 

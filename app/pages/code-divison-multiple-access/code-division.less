@@ -1,0 +1,43 @@
+
+.horizontal-slider {
+  width: 100%;
+  max-width: 500px;
+  height: 50px;
+}
+.handle {
+  font-size: 16px;
+  text-align: center;
+  background-color: grey;
+  color: white;
+  cursor: pointer;
+}
+.handle.active {
+  background-color: #c6c6c6;
+}
+.bar {
+  position: relative;
+  background: #ddd;
+}
+.bar.bar-1 {
+  background: rgb(31, 119, 180);
+}
+.horizontal-slider .bar {
+  top: 20px;
+  height: 10px;
+}
+.horizontal-slider .handle {
+  top: 9px;
+  width: 30px;
+  height: 30px;
+  line-height: 24px;
+  border-radius: 15px;
+}
+
+.phase-changer {
+  margin: 24px;
+
+  .phase-value {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}

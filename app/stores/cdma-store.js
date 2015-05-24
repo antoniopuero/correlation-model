@@ -4,7 +4,6 @@ var actions = require('../actions/cdma-actions');
 var _ = require('lodash');
 var processTriggerChain = require('../processing/trigger-chain');
 var signalHelpers = require('../processing/signal-helpers');
-var signalConst = require('../constants/signals');
 
 
 module.exports = (function () {
@@ -41,18 +40,16 @@ module.exports = (function () {
   secondSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondSignalWithSequence), carrier, carrier.length);
 
 
-
   mixedSignal = signalHelpers.addSignals([
     firstSignalOnCarrier,
     secondSignalOnCarrier
   ]);
 
-  mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
+  mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 1);
 
-  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length), true), carrier);
+  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
 
-  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length), true), signalHelpers.generateCos(10));
-
+  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
 
 
   return flux.createStore({
@@ -67,7 +64,11 @@ module.exports = (function () {
     mixedSignalWithNoise: _.flatten(mixedSignalWithNoise),
     firstSignalCorrelation: firstSignalCorrelation,
     secondSignalCorrelation: secondSignalCorrelation,
+    firstPhase: 0,
+    secondPhase: 0,
     actions: [
+      actions.updatePhaseFirstSignal,
+      actions.updatePhaseSecondSignal
     ],
 
     calculateCorrelation: function () {
@@ -75,6 +76,18 @@ module.exports = (function () {
         this.isMSequence = signalHelpers.isMSequence(this.sequence);
         this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
       }
+    },
+
+    updatePhaseFirstSignal: function (phase) {
+      this.firstPhase = phase;
+      this.firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase));
+      this.emitChange();
+    },
+
+    updatePhaseSecondSignal: function (phase) {
+      this.secondPhase = phase;
+      this.secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase));
+      this.emitChange();
     },
 
     exports: {
@@ -91,10 +104,10 @@ module.exports = (function () {
         return this.carrier;
       },
       getFirstSignalOnCarrier: function () {
-       return this.firstSignalOnCarrier;
+        return this.firstSignalOnCarrier;
       },
       getSecondSignalOnCarrier: function () {
-       return this.secondSignalOnCarrier;
+        return this.secondSignalOnCarrier;
       },
       getCommonChannelSignal: function () {
         return this.mixedSignal;
@@ -107,6 +120,12 @@ module.exports = (function () {
       },
       getSecondSignalCorrelation: function () {
         return this.secondSignalCorrelation;
+      },
+      getFirstSignalPhase: function () {
+        return this.firstPhase;
+      },
+      getSecondSignalPhase: function () {
+        return this.secondPhase;
       }
     }
   });
