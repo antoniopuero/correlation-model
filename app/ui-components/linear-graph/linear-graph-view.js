@@ -3,8 +3,6 @@ var _ = require('lodash');
 var classNames = require('classnames');
 var {LineChart, Brush} = require('react-d3-components');
 
-var previousExtent = [];
-
 module.exports = React.createClass({
   displayName: 'LinearGraph',
 
@@ -56,7 +54,7 @@ module.exports = React.createClass({
       width: width,
       height: height,
       yScale: d3.scale.linear().domain([minY - 0.1, maxY  + 0.1]).range([height - 70, 0]),
-      xScale: d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70]),
+      xScale: d3.scale.linear().domain([minX - 1, maxX + 1]).range([0, width - 70]),
       xScaleBrush: d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70])
     };
   },
@@ -107,7 +105,7 @@ module.exports = React.createClass({
     var minX = Math.min.apply(Math, xValues);
     var maxX = Math.max.apply(Math, xValues);
 
-    var xScaleDomain = !_.isEmpty(previousExtent) ? previousExtent : [minX - 0.1, maxX + 0.1];
+    var xScaleDomain = !_.isEmpty(this.previousExtent) ? this.previousExtent : [minX - 1, maxX + 1];
     var xScale = d3.scale.linear().domain(xScaleDomain).range([0, width - 70]);
     var xScaleBrush = d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70]);
     var yScale = d3.scale.linear().domain([minY - 0.1, maxY  + 0.1]).range([height - 70, 0]);
@@ -122,7 +120,7 @@ module.exports = React.createClass({
   },
 
   _onChange: function (extent) {
-    previousExtent = extent;
+    this.previousExtent = extent;
     this.setState({xScale: d3.scale.linear().domain([extent[0], extent[1]]).range([0, this.state.width - 70])});
   },
 

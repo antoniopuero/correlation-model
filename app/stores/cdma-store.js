@@ -43,7 +43,7 @@ module.exports = (function () {
   mixedSignal = signalHelpers.addSignals([
     firstSignalOnCarrier,
     secondSignalOnCarrier
-  ]);
+  ], 9);
 
   mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 1);
 

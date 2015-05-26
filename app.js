@@ -63,8 +63,8 @@ function adminRestrict (req, res, next) {
 
 //router
 
-app.get('/', restrict, function (req, res) {
-  res.render('index', {texts: texts, session: req.session, prod: process.env.LOCAL_ENV === 'production'});
+app.get('/', function (req, res) {
+    res.render('index', {texts: texts, session: req.session, prod: process.env.LOCAL_ENV === 'production'});
 });
 
 app.get('/login', function (req, res) {
@@ -95,7 +95,7 @@ app.get('/admin/group/:groupName', restrict, adminRestrict, function (req, res) 
 });
 
 app.post('/admin/group/:groupName/delete', restrict, adminRestrict, function (req, res) {
-  db.User.find({group: req.params.groupName}).remove(function (err, users) {
+  db.User.remove({groupName: req.params.groupName}, function (err, users) {
     res.redirect('/admin');
   });
 });

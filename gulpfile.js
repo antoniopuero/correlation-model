@@ -50,7 +50,6 @@ var browserifyTask = function (options) {
       .on('error', gutil.log)
       .pipe(source('main.js'))
       .pipe(gulp.dest(options.dest))
-      .pipe(gulpif(options.development, livereload()))
       .pipe(notify(function () {
         console.log('APP bundle built in ' + (Date.now() - start) + 'ms');
       }));
@@ -87,7 +86,6 @@ var browserifyTask = function (options) {
       .on('error', gutil.log)
 	      .pipe(source('specs.js'))
 	      .pipe(gulp.dest(options.dest))
-	      .pipe(livereload())
 	      .pipe(notify(function () {
 	        console.log('TEST bundle built in ' + (Date.now() - start) + 'ms');
 	      }));
@@ -228,5 +226,7 @@ gulp.task('serve', ['default'], function () {
     script: 'app.js'
     , ext: 'js jade'
     , env: { 'NODE_ENV': 'development' }
-  })
+  }).on('restart', function () {
+    livereload();
+  });
 });
