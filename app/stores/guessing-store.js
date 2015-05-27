@@ -21,8 +21,6 @@ module.exports = (function () {
     secondRefSequence,
     mixedSignal;
 
-  console.log(firstRandomChain)
-
   console.log(firstRandomSignal, secondRandomSignal);
 
   firstChainInAction.initChain.apply(firstChainInAction, firstRandomChain);

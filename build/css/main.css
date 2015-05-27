@@ -90,6 +90,19 @@
 }
 
 
+.signal-with-sequence-container .trigger-chain-wrapper .feedback-line {
+  width: 14%;
+}
+.signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper {
+  width: 60%;
+}
+.signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper .white-holder {
+  width: 27%;
+}
+
+.uneditable input {
+  display: none;
+}
 
 .input-section {
   margin-top: 20px;

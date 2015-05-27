@@ -127,9 +127,9 @@ module.exports = React.createClass({
 
   render: function () {
     var classes = classNames('brush', {hidden: this.props.withoutBrush});
-    if (_.isEmpty(this.state.graphData.values)) {
-      return (<div></div>);
-    } else {
+    //if (_.isEmpty(this.state.graphData.values)) {
+    //  return (<div></div>);
+    //} else {
       return (
         <div>
           <LineChart
@@ -154,6 +154,6 @@ module.exports = React.createClass({
         </div>
       );
     }
-  }
+  //}
 
 });

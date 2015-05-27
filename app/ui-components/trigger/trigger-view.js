@@ -17,12 +17,12 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    var {number, value, inFeedback} = this.props;
+    var {number, value, inFeedback, uneditable} = this.props;
     return (
       <div className="trigger">
         <span className="value">{value}</span>
         <span className="number">{number}</span>
-        <Checkbox name={number} checked={inFeedback} handler={this.addTriggerToFeedback}/>
+        <Checkbox name={number} checked={inFeedback} handler={this.addTriggerToFeedback} uneditable={uneditable}/>
       </div>
     );
   }

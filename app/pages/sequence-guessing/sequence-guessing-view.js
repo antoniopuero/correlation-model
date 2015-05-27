@@ -24,6 +24,8 @@ module.exports = React.createClass({
       userInputSignals: Store.getUserInputSignals(),
       signalCorrectnessArray: Store.getSignalCorrectnessArray(),
       allSignalsAreCorrect: Store.allSignalsAreCorrect(),
+      triggerValues: Store.getTriggerValues(),
+      feedbackTriggers: Store.getFeedbackTriggers(),
       texts: MainStore.getTexts()
     };
   },
@@ -43,7 +45,9 @@ module.exports = React.createClass({
       correlation: Store.getCorrelation(),
       userInputSignals: Store.getUserInputSignals(),
       signalCorrectnessArray: Store.getSignalCorrectnessArray(),
-      allSignalsAreCorrect: Store.allSignalsAreCorrect()
+      allSignalsAreCorrect: Store.allSignalsAreCorrect(),
+      triggerValues: Store.getTriggerValues(),
+      feedbackTriggers: Store.getFeedbackTriggers()
     }, this.state);
     this.setState(stateDiff);
   },
@@ -73,18 +77,17 @@ module.exports = React.createClass({
       'hidden': !self.state.allSignalsAreCorrect
     });
 
-    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray, texts} = this.state;
+    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray, triggerValues, feedbackTriggers, texts} = this.state;
 
     return (
       <div className="sequence-guessing-container">
 
         <LinearGraph data={signal} width={800} height={400}/>
 
-        <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId}/>
+        <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers}/>
         <div className={classes}>{sequence.join('')}</div>
         <Button name="Init chain with feedback" handler={this.initSequence}/>
         <div className={hidden}>
-          <Button name="One step" handler={this.proceedChain}/>
           <Button name="Whole sequence" handler={this.getWholeSequence}/>
         </div>
 

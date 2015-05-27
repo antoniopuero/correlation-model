@@ -6,9 +6,9 @@ module.exports = React.createClass({
   displayName: 'Checkbox',
 
   render: function () {
-    var {name, handler, checked} = this.props;
+    var {name, handler, checked, uneditable} = this.props;
 
-    var classes = classNames('checkbox', {checked: checked});
+    var classes = classNames('checkbox', {checked: checked, uneditable: uneditable});
 
     return (
       <div className={classes}>

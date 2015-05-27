@@ -12,7 +12,7 @@ Router.run(routes, function(Handler) {
 },{"./routes":18,"react":255,"react-router":85}],2:[function(require,module,exports){
 "use strict";
 var flux = require('flux-react');
-module.exports = flux.createActions(['updatePhaseFirstSignal', 'updatePhaseSecondSignal']);
+module.exports = flux.createActions(['updatePhaseFirstSignal', 'updatePhaseSecondSignal', 'stepForward']);
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/actions/cdma-actions.js
@@ -272,6 +272,8 @@ module.exports = React.createClass({
       userInputSignals: Store.getUserInputSignals(),
       signalCorrectnessArray: Store.getSignalCorrectnessArray(),
       allSignalsAreCorrect: Store.allSignalsAreCorrect(),
+      triggerValues: Store.getTriggerValues(),
+      feedbackTriggers: Store.getFeedbackTriggers(),
       texts: MainStore.getTexts()
     };
   },
@@ -291,7 +293,9 @@ module.exports = React.createClass({
       correlation: Store.getCorrelation(),
       userInputSignals: Store.getUserInputSignals(),
       signalCorrectnessArray: Store.getSignalCorrectnessArray(),
-      allSignalsAreCorrect: Store.allSignalsAreCorrect()
+      allSignalsAreCorrect: Store.allSignalsAreCorrect(),
+      triggerValues: Store.getTriggerValues(),
+      feedbackTriggers: Store.getFeedbackTriggers()
     }, this.state);
     this.setState(stateDiff);
   },
@@ -319,6 +323,8 @@ module.exports = React.createClass({
         signal = $__0.signal,
         userInputSignals = $__0.userInputSignals,
         signalCorrectnessArray = $__0.signalCorrectnessArray,
+        triggerValues = $__0.triggerValues,
+        feedbackTriggers = $__0.feedbackTriggers,
         texts = $__0.texts;
     return (React.createElement("div", {className: "sequence-guessing-container"}, React.createElement(LinearGraph, {
       data: signal,
@@ -328,14 +334,13 @@ module.exports = React.createClass({
       chainLength: triggerChainLength,
       step: step,
       maxStep: maxStep,
-      newSequenceId: newSequenceId
+      newSequenceId: newSequenceId,
+      triggerValues: triggerValues,
+      feedbackTriggers: feedbackTriggers
     }), React.createElement("div", {className: classes}, sequence.join('')), React.createElement(Button, {
       name: "Init chain with feedback",
       handler: this.initSequence
     }), React.createElement("div", {className: hidden}, React.createElement(Button, {
-      name: "One step",
-      handler: this.proceedChain
-    }), React.createElement(Button, {
       name: "Whole sequence",
       handler: this.getWholeSequence
     })), React.createElement(LinearGraph, {
@@ -428,6 +433,7 @@ var actions = require('../../actions/cdma-actions');
 var Button = require('../../ui-components/button/button-view');
 var LinearGraph = require('../../ui-components/linear-graph/linear-graph-view');
 var PrincipalSchema = require('../../ui-components/principal-schema/principal-schema-view');
+var TriggerChain = require('../../ui-components/trigger-chain/trigger-chain-view');
 var classNames = require('classnames');
 module.exports = React.createClass({
   displayName: "exports",
@@ -436,6 +442,11 @@ module.exports = React.createClass({
       signal: Store.getSignal(),
       sequence: Store.getSequence(),
       signalWithSequence: Store.getSignalWithSequence(),
+      triggerChainLength: Store.getTriggerChainLength(),
+      step: Store.getStep(),
+      maxStep: Store.getMaxStep(),
+      triggerValues: Store.getTriggerValues(),
+      feedbackTriggers: Store.getFeedbackTriggers(),
       texts: MainStore.getTexts()
     };
   },
@@ -449,8 +460,15 @@ module.exports = React.createClass({
     this.setState({
       signal: Store.getSignal(),
       sequence: Store.getSequence(),
-      signalWithSequence: Store.getSignalWithSequence()
+      signalWithSequence: Store.getSignalWithSequence(),
+      triggerChainLength: Store.getTriggerChainLength(),
+      triggerValues: Store.getTriggerValues(),
+      feedbackTriggers: Store.getFeedbackTriggers(),
+      step: Store.getStep()
     });
+  },
+  proceedChain: function() {
+    actions.stepForward();
   },
   render: function() {
     var self = this;
@@ -458,14 +476,30 @@ module.exports = React.createClass({
         signal = $__0.signal,
         sequence = $__0.sequence,
         signalWithSequence = $__0.signalWithSequence,
-        texts = $__0.texts;
+        texts = $__0.texts,
+        triggerChainLength = $__0.triggerChainLength,
+        step = $__0.step,
+        maxStep = $__0.maxStep,
+        triggerValues = $__0.triggerValues,
+        feedbackTriggers = $__0.feedbackTriggers;
     return (React.createElement("div", {className: "signal-with-sequence-container"}, React.createElement("h2", null, texts.signalWithSequence.heading), React.createElement("p", null, texts.signalWithSequence.introPart), React.createElement(PrincipalSchema, {highlighted: ['data-generator', 'prn-generator', 'xor']}), React.createElement(LinearGraph, {
       data: signal,
       width: 800,
       height: 400,
       withoutBrush: true,
       emulateBars: true
-    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalCapture), React.createElement("p", null, texts.signalWithSequence.aboutPRNCode), React.createElement(LinearGraph, {
+    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalCapture), React.createElement("p", null, texts.signalWithSequence.aboutPRNCode), React.createElement(TriggerChain, {
+      chainLength: triggerChainLength,
+      step: step,
+      maxStep: maxStep,
+      newSequenceId: 'static',
+      triggerValues: triggerValues,
+      feedbackTriggers: feedbackTriggers,
+      uneditable: true
+    }), React.createElement(Button, {
+      name: "One step",
+      handler: this.proceedChain
+    }), React.createElement(LinearGraph, {
       data: sequence,
       width: 800,
       height: 400,
@@ -481,7 +515,7 @@ module.exports = React.createClass({
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/pages/signal-with-sequence/signal-with-sequence-view.js
-},{"../../actions/cdma-actions":2,"../../stores/cdma-store":19,"../../stores/main-store":21,"../../ui-components/button/button-view":22,"../../ui-components/linear-graph/linear-graph-view":26,"../../ui-components/principal-schema/principal-schema-view":27,"classnames":32,"react":255}],13:[function(require,module,exports){
+},{"../../actions/cdma-actions":2,"../../stores/cdma-store":19,"../../stores/main-store":21,"../../ui-components/button/button-view":22,"../../ui-components/linear-graph/linear-graph-view":26,"../../ui-components/principal-schema/principal-schema-view":27,"../../ui-components/trigger-chain/trigger-chain-view":28,"classnames":32,"react":255}],13:[function(require,module,exports){
 "use strict";
 var _ = require('lodash');
 module.exports = {
@@ -845,7 +879,7 @@ var App = React.createClass({
         className: "btn btn-default btn-lg"
       }, texts.commonTexts.nextButton);
     }
-    return _.isEmpty(texts) ? (React.createElement("div", null)) : (React.createElement("div", null, React.createElement("div", {className: "container-fluid"}, React.createElement(RouteHandler, null)), React.createElement("div", {className: "container-fluid"}, React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-md-6 col-xs-6"}, prevLink), React.createElement("div", {className: "col-md-6 col-xs-6 text-right"}, nextLink)))));
+    return _.isEmpty(texts) ? (React.createElement("div", null)) : (React.createElement("div", null, React.createElement("div", {className: "container"}, React.createElement(RouteHandler, null)), React.createElement("div", {className: "container"}, React.createElement("div", {className: "row"}, React.createElement("div", {className: "col-md-6 col-xs-6"}, prevLink), React.createElement("div", {className: "col-md-6 col-xs-6 text-right"}, nextLink)))));
   }
 });
 var routes = (React.createElement(Route, {
@@ -893,6 +927,7 @@ module.exports = (function() {
       secondRandomChain = [5, [3, 5]],
       secondSignal = [1, 1, 0, 1, 0],
       secondChainInAction = processTriggerChain(),
+      dynamicChain = processTriggerChain(),
       carrier = signalHelpers.generateSin(10),
       firstRefSequence,
       secondRefSequence,
@@ -908,6 +943,8 @@ module.exports = (function() {
   secondChainInAction.initChain.apply(secondChainInAction, secondRandomChain);
   secondChainInAction.set();
   secondRefSequence = secondChainInAction.getSequence();
+  dynamicChain.initChain.apply(dynamicChain, firstChain);
+  dynamicChain.set();
   firstSignalWithSequence = signalHelpers.mixSignalWithMSequence(firstSignal, firstRefSequence);
   secondSignalWithSequence = signalHelpers.mixSignalWithMSequence(secondSignal, secondRefSequence);
   firstSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstSignalWithSequence), carrier, carrier.length);
@@ -919,8 +956,8 @@ module.exports = (function() {
   return flux.createStore({
     triggerChain: firstChain,
     signal: firstSignal,
-    sequence: firstRefSequence,
-    signalWithSequence: firstSignalWithSequence,
+    sequence: [],
+    signalWithSequence: [],
     carrier: carrier,
     firstSignalOnCarrier: firstSignalOnCarrier,
     secondSignalOnCarrier: secondSignalOnCarrier,
@@ -930,7 +967,12 @@ module.exports = (function() {
     secondSignalCorrelation: secondSignalCorrelation,
     firstPhase: 0,
     secondPhase: 0,
-    actions: [actions.updatePhaseFirstSignal, actions.updatePhaseSecondSignal],
+    step: 0,
+    maxStep: Math.pow(2, firstChain[0]) - 1,
+    triggerChainLength: firstChain[0],
+    triggerValues: dynamicChain.getChainSnapshot(),
+    feedbackTriggers: firstChain[1],
+    actions: [actions.stepForward, actions.updatePhaseFirstSignal, actions.updatePhaseSecondSignal],
     calculateCorrelation: function() {
       if (this.sequence.length) {
         this.isMSequence = signalHelpers.isMSequence(this.sequence);
@@ -946,6 +988,15 @@ module.exports = (function() {
       this.secondPhase = phase;
       this.secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase));
       this.emitChange();
+    },
+    stepForward: function() {
+      if (this.step < this.maxStep) {
+        this.step += 1;
+        this.sequence.unshift(dynamicChain.moveValueThroughChain());
+        this.triggerValues = dynamicChain.getChainSnapshot();
+        this.signalWithSequence = signalHelpers.mixSignalWithMSequence(firstSignal, this.sequence);
+        this.emitChange();
+      }
     },
     exports: {
       getSignal: function() {
@@ -983,6 +1034,21 @@ module.exports = (function() {
       },
       getSecondSignalPhase: function() {
         return this.secondPhase;
+      },
+      getTriggerValues: function() {
+        return this.triggerValues;
+      },
+      getFeedbackTriggers: function() {
+        return this.feedbackTriggers;
+      },
+      getStep: function() {
+        return this.step;
+      },
+      getMaxStep: function() {
+        return this.maxStep;
+      },
+      getTriggerChainLength: function() {
+        return this.triggerChainLength;
       }
     }
   });
@@ -1011,7 +1077,6 @@ module.exports = (function() {
       firstRefSequence,
       secondRefSequence,
       mixedSignal;
-  console.log(firstRandomChain);
   console.log(firstRandomSignal, secondRandomSignal);
   firstChainInAction.initChain.apply(firstChainInAction, firstRandomChain);
   firstChainInAction.set();
@@ -1218,8 +1283,12 @@ module.exports = React.createClass({
     var $__0 = this.props,
         name = $__0.name,
         handler = $__0.handler,
-        checked = $__0.checked;
-    var classes = classNames('checkbox', {checked: checked});
+        checked = $__0.checked,
+        uneditable = $__0.uneditable;
+    var classes = classNames('checkbox', {
+      checked: checked,
+      uneditable: uneditable
+    });
     return (React.createElement("div", {className: classes}, React.createElement("label", null, React.createElement("input", {
       type: "checkbox",
       onChange: handler,
@@ -1412,38 +1481,34 @@ module.exports = React.createClass({
   },
   render: function() {
     var classes = classNames('brush', {hidden: this.props.withoutBrush});
-    if (_.isEmpty(this.state.graphData.values)) {
-      return (React.createElement("div", null));
-    } else {
-      return (React.createElement("div", null, React.createElement(LineChart, {
-        data: this.state.graphData,
-        width: this.state.width,
-        height: this.state.height,
-        margin: {
-          top: 10,
-          bottom: 50,
-          left: 50,
-          right: 20
-        },
-        xScale: this.state.xScale,
-        yScale: this.state.yScale
-      }), React.createElement("div", {
-        className: classes,
-        style: {float: 'none'}
-      }, React.createElement(Brush, {
-        width: this.state.width,
-        height: 50,
-        margin: {
-          top: 0,
-          bottom: 30,
-          left: 50,
-          right: 20
-        },
-        xScale: this.state.xScaleBrush,
-        extent: [0, Math.floor(this.state.dataSetLength / 50)],
-        onChange: this._onChange
-      }))));
-    }
+    return (React.createElement("div", null, React.createElement(LineChart, {
+      data: this.state.graphData,
+      width: this.state.width,
+      height: this.state.height,
+      margin: {
+        top: 10,
+        bottom: 50,
+        left: 50,
+        right: 20
+      },
+      xScale: this.state.xScale,
+      yScale: this.state.yScale
+    }), React.createElement("div", {
+      className: classes,
+      style: {float: 'none'}
+    }, React.createElement(Brush, {
+      width: this.state.width,
+      height: 50,
+      margin: {
+        top: 0,
+        bottom: 30,
+        left: 50,
+        right: 20
+      },
+      xScale: this.state.xScaleBrush,
+      extent: [0, Math.floor(this.state.dataSetLength / 50)],
+      onChange: this._onChange
+    }))));
   }
 });
 
@@ -1469,7 +1534,6 @@ module.exports = React.createClass({
 },{"lodash":39,"react":255}],28:[function(require,module,exports){
 "use strict";
 var React = require('react');
-var Store = require('../../stores/guessing-store');
 var actions = require('../../actions/guessing-actions');
 var TriggerEntity = require('../trigger/trigger-view');
 var _ = require('lodash');
@@ -1478,29 +1542,37 @@ module.exports = React.createClass({
   getInitialState: function() {
     var $__0 = this.props,
         chainLength = $__0.chainLength,
-        maxStep = $__0.maxStep;
+        maxStep = $__0.maxStep,
+        step = $__0.step,
+        triggerValues = $__0.triggerValues,
+        feedbackTriggers = $__0.feedbackTriggers,
+        uneditable = $__0.uneditable;
     return {
-      step: Store.getStep(),
+      step: step,
       chainLength: chainLength,
-      triggerValues: Store.getTriggerValues(),
-      triggersInFeedback: Store.getFeedbackTriggers(),
-      maxStep: maxStep
+      triggerValues: triggerValues,
+      triggersInFeedback: feedbackTriggers,
+      maxStep: maxStep,
+      uneditable: uneditable
     };
   },
-  componentWillReceiveProps: function(nextProps) {},
-  componentWillMount: function() {
-    Store.addChangeListener(this.changeState);
-  },
-  componentWillUnmount: function() {
-    Store.removeChangeListener(this.changeState);
-  },
-  changeState: function() {
+  componentWillReceiveProps: function(nextProps) {
+    var $__0 = nextProps,
+        chainLength = $__0.chainLength,
+        maxStep = $__0.maxStep,
+        step = $__0.step,
+        triggerValues = $__0.triggerValues,
+        feedbackTriggers = $__0.feedbackTriggers;
     this.setState({
-      triggerValues: Store.getTriggerValues(),
-      triggersInFeedback: Store.getFeedbackTriggers()
+      step: step,
+      chainLength: chainLength,
+      triggerValues: triggerValues,
+      triggersInFeedback: feedbackTriggers,
+      maxStep: maxStep
     });
   },
   renderTrigger: function(value, index) {
+    var uneditable = this.state.uneditable;
     var isInFeedback = _.indexOf(this.state.triggersInFeedback, index + 1) !== -1;
     if (!value) {
       value = 0;
@@ -1508,7 +1580,8 @@ module.exports = React.createClass({
     return (React.createElement(TriggerEntity, {
       value: value,
       number: index + 1,
-      inFeedback: isInFeedback
+      inFeedback: isInFeedback,
+      uneditable: uneditable
     }));
   },
   render: function() {
@@ -1518,7 +1591,7 @@ module.exports = React.createClass({
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/ui-components/trigger-chain/trigger-chain-view.js
-},{"../../actions/guessing-actions":3,"../../stores/guessing-store":20,"../trigger/trigger-view":29,"lodash":39,"react":255}],29:[function(require,module,exports){
+},{"../../actions/guessing-actions":3,"../trigger/trigger-view":29,"lodash":39,"react":255}],29:[function(require,module,exports){
 "use strict";
 var React = require('react');
 var Checkbox = require('../checkbox/checkbox-view');
@@ -1537,11 +1610,13 @@ module.exports = React.createClass({
     var $__0 = this.props,
         number = $__0.number,
         value = $__0.value,
-        inFeedback = $__0.inFeedback;
+        inFeedback = $__0.inFeedback,
+        uneditable = $__0.uneditable;
     return (React.createElement("div", {className: "trigger"}, React.createElement("span", {className: "value"}, value), React.createElement("span", {className: "number"}, number), React.createElement(Checkbox, {
       name: number,
       checked: inFeedback,
-      handler: this.addTriggerToFeedback
+      handler: this.addTriggerToFeedback,
+      uneditable: uneditable
     })));
   }
 });

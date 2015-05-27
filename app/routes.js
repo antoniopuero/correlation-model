@@ -91,12 +91,12 @@ var App = React.createClass({
     return _.isEmpty(texts) ? (<div></div>) : (
       <div>
 
-        <div className="container-fluid">
+        <div className="container">
           {/* this is the important part */}
           <RouteHandler/>
         </div>
 
-        <div className="container-fluid">
+        <div className="container">
           <div className="row">
             <div className="col-md-6 col-xs-6">
               {prevLink}

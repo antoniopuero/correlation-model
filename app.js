@@ -15,8 +15,8 @@ app.set('view engine', 'jade');
 app.set('port', (process.env.PORT || 3000));
 
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
+  secret: 'nobody will see it',
+  resave: true,
   saveUninitialized: true,
   cookie: {
     maxAge: 60000
@@ -52,7 +52,7 @@ function restrict(req, res, next) {
   }
 }
 
-function adminRestrict (req, res, next) {
+function adminRestrict(req, res, next) {
   if (req.session.user.admin) {
     next();
   } else {
@@ -63,8 +63,8 @@ function adminRestrict (req, res, next) {
 
 //router
 
-app.get('/', function (req, res) {
-    res.render('index', {texts: texts, session: req.session, prod: process.env.LOCAL_ENV === 'production'});
+app.get('/', restrict, function (req, res) {
+  res.render('index', {texts: texts, session: req.session, prod: process.env.LOCAL_ENV === 'production'});
 });
 
 app.get('/login', function (req, res) {
@@ -121,7 +121,7 @@ app.post('/login', function (req, res) {
     } else {
       console.log(err);
 
-      pwd.hash(req.body.userPassword, function(err, salt, hash) {
+      pwd.hash(req.body.userPassword, function (err, salt, hash) {
         if (err) {
           console.log(err);
         }
@@ -134,13 +134,15 @@ app.post('/login', function (req, res) {
           hash: hash
         });
 
-        user.save(function(err) {
+        user.save(function (err) {
           if (err) {
             console.log(err);
           } else {
             console.log("user saved");
-            req.session.user = user;
-            res.redirect('/');
+            req.session.regenerate(function () {
+              req.session.user = user;
+              res.redirect('/');
+            });
           }
         });
       });
@@ -150,7 +152,11 @@ app.post('/login', function (req, res) {
 
 app.post('/finished', function (req, res) {
   var session = req.session;
-  db.User.findOne({firstName: session.user.firstName, lastName: session.user.lastName, groupName: session.user.groupName}, function (err, user) {
+  db.User.findOne({
+    firstName: session.user.firstName,
+    lastName: session.user.lastName,
+    groupName: session.user.groupName
+  }, function (err, user) {
     user.done = true;
     user.save(function (err) {
 
