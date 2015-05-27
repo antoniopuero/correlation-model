@@ -19,7 +19,7 @@ module.exports = flux.createActions(['updatePhaseFirstSignal', 'updatePhaseSecon
 },{"flux-react":36}],3:[function(require,module,exports){
 "use strict";
 var flux = require('flux-react');
-module.exports = flux.createActions(['stepForward', 'lastStep', 'updateSequence', 'initSequence', 'hideGetButtons', 'addTriggerToFeedback', 'deleteTriggerFromFeedback', 'userChangeInputSignals']);
+module.exports = flux.createActions(['updateSequence', 'initSequence', 'hideGetButtons', 'addTriggerToFeedback', 'deleteTriggerFromFeedback', 'userChangeInputSignals']);
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/actions/guessing-actions.js
@@ -44,7 +44,7 @@ module.exports = {getRandomSignal: function() {
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/constants/signals.js
 },{"lodash":39}],6:[function(require,module,exports){
 "use strict";
-var hardcodedChains = [[10, [3, 10]], [10, [7, 10]]];
+var hardcodedChains = [[10, [2, 3, 8, 10]], [10, [1, 3, 7, 10]], [10, [1, 4, 9, 10]], [10, [1, 6, 9, 10]], [10, [1, 5, 8, 10]], [10, [1, 6, 8, 10]], [10, [3, 10]], [10, [7, 10]]];
 module.exports = {getRandomChain: function() {
     var index = Math.floor(Math.random() * hardcodedChains.length);
     var chain = hardcodedChains[index];
@@ -299,19 +299,12 @@ module.exports = React.createClass({
     }, this.state);
     this.setState(stateDiff);
   },
-  proceedChain: function() {
-    actions.stepForward();
-  },
-  getWholeSequence: function() {
-    actions.lastStep();
-  },
   initSequence: function() {
     actions.initSequence();
   },
   render: function() {
     var self = this;
     var classes = classNames('sequence-wrapper', {'m-sequence': self.state.isMSequence});
-    var hidden = classNames({'hidden': self.state.hiddenButtons});
     var correct = classNames({'hidden': !self.state.allSignalsAreCorrect});
     var $__0 = this.state,
         triggerChainLength = $__0.triggerChainLength,
@@ -340,10 +333,7 @@ module.exports = React.createClass({
     }), React.createElement("div", {className: classes}, sequence.join('')), React.createElement(Button, {
       name: "Init chain with feedback",
       handler: this.initSequence
-    }), React.createElement("div", {className: hidden}, React.createElement(Button, {
-      name: "Whole sequence",
-      handler: this.getWholeSequence
-    })), React.createElement(LinearGraph, {
+    }), React.createElement(LinearGraph, {
       data: correlation,
       xOffset: 50,
       width: 800,
@@ -1106,7 +1096,7 @@ module.exports = (function() {
       return '';
     }))],
     signalCorrectnessArray: ['', ''],
-    actions: [actions.stepForward, actions.lastStep, actions.initSequence, actions.hideGetButtons, actions.addTriggerToFeedback, actions.deleteTriggerFromFeedback, actions.userChangeInputSignals],
+    actions: [actions.initSequence, actions.hideGetButtons, actions.addTriggerToFeedback, actions.deleteTriggerFromFeedback, actions.userChangeInputSignals],
     clearSequence: function() {
       this.step = 0;
       this.sequence = [];
@@ -1121,28 +1111,15 @@ module.exports = (function() {
         this.correlation = signalHelpers.correlation(mixedSignal, signalHelpers.transformBinaryData(this.sequence));
       }
     },
-    stepForward: function() {
-      if (this.step < this.maxStep) {
-        this.step += 1;
-        this.sequence.unshift(dynamicChain.moveValueThroughChain());
-        this.triggerValues = dynamicChain.getChainSnapshot();
-        this.calculateCorrelation();
-        this.emitChange();
-      }
-    },
-    lastStep: function() {
-      this.step = this.maxStep;
-      this.sequence = dynamicChain.getSequence();
-      this.triggerValues = dynamicChain.getChainSnapshot();
-      this.calculateCorrelation();
-      this.emitChange();
-    },
     initSequence: function() {
       this.clearSequence();
       dynamicChain = processTriggerChain();
       dynamicChain.initChain(firstRandomChain[0], this.feedbackTriggers);
       dynamicChain.set();
       this.triggerValues = dynamicChain.getChainSnapshot();
+      this.sequence = dynamicChain.getSequence();
+      this.triggerValues = dynamicChain.getChainSnapshot();
+      this.calculateCorrelation();
       this.emitChange();
     },
     hideGetButtons: function() {
