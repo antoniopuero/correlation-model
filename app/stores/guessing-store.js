@@ -56,8 +56,6 @@ module.exports = (function () {
     userInputSignals: [_.map(firstRandomSignal, () => ''), _.map(firstRandomSignal, () => '')],
     signalCorrectnessArray: ['', ''],
     actions: [
-      actions.stepForward,
-      actions.lastStep,
       actions.initSequence,
       actions.hideGetButtons,
       actions.addTriggerToFeedback,
@@ -81,23 +79,15 @@ module.exports = (function () {
       }
     },
 
-    stepForward: function () {
-      if (this.step < this.maxStep) {
-        this.step += 1;
-        this.sequence.unshift(dynamicChain.moveValueThroughChain());
-        this.triggerValues = dynamicChain.getChainSnapshot();
-        this.calculateCorrelation();
-        this.emitChange();
-      }
-    },
-
-    lastStep: function () {
-      this.step = this.maxStep;
-      this.sequence = dynamicChain.getSequence();
-      this.triggerValues = dynamicChain.getChainSnapshot();
-      this.calculateCorrelation();
-      this.emitChange();
-    },
+    //stepForward: function () {
+    //  if (this.step < this.maxStep) {
+    //    this.step += 1;
+    //    this.sequence.unshift(dynamicChain.moveValueThroughChain());
+    //    this.triggerValues = dynamicChain.getChainSnapshot();
+    //    this.calculateCorrelation();
+    //    this.emitChange();
+    //  }
+    //},
 
     initSequence: function () {
       this.clearSequence();
@@ -105,6 +95,9 @@ module.exports = (function () {
       dynamicChain.initChain(firstRandomChain[0], this.feedbackTriggers);
       dynamicChain.set();
       this.triggerValues = dynamicChain.getChainSnapshot();
+      this.sequence = dynamicChain.getSequence();
+      this.triggerValues = dynamicChain.getChainSnapshot();
+      this.calculateCorrelation();
       this.emitChange();
     },
 

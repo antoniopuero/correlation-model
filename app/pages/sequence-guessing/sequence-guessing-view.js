@@ -51,13 +51,6 @@ module.exports = React.createClass({
     }, this.state);
     this.setState(stateDiff);
   },
-  proceedChain: function () {
-    actions.stepForward();
-  },
-
-  getWholeSequence: function () {
-    actions.lastStep();
-  },
 
   initSequence: function () {
     actions.initSequence();
@@ -67,10 +60,6 @@ module.exports = React.createClass({
     var self = this;
     var classes = classNames('sequence-wrapper', {
       'm-sequence': self.state.isMSequence
-    });
-
-    var hidden = classNames({
-      'hidden': self.state.hiddenButtons
     });
 
     var correct = classNames({
@@ -87,9 +76,6 @@ module.exports = React.createClass({
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers}/>
         <div className={classes}>{sequence.join('')}</div>
         <Button name="Init chain with feedback" handler={this.initSequence}/>
-        <div className={hidden}>
-          <Button name="Whole sequence" handler={this.getWholeSequence}/>
-        </div>
 
         <LinearGraph data={correlation} xOffset={50} width={800} height={400}/>
         <InputSection userInputSignals={userInputSignals} signalCorrectnessArray={signalCorrectnessArray}/>
