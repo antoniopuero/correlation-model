@@ -32,5 +32,12 @@ module.exports = {
       n += 1;
     }
     return Math.pow(2, n + 1);
+  },
+  integrate: function (data, period) {
+    var self = this;
+    var count = Math.floor(data.length / period);
+    return _.map(_.range(count), function (index) {
+      return self.add(_.slice(data, index * period, (index + 1) * period));
+    });
   }
 };

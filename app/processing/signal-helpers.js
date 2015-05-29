@@ -62,6 +62,7 @@ module.exports = {
 
     return _.map(_.range(maxSignalLength), function (index) {
       return _.reduce(signals, function (currentAcc, signal) {
+
           if (signal[index]) {
             return currentAcc + signal[index];
           } else {
@@ -106,11 +107,11 @@ module.exports = {
   },
 
 
-  correlation: function (signal, anotherSignal, withNoise) {
+  correlation: function (signal, anotherSignal) {
 
     if (signal.length != anotherSignal.length) {
-      signal = _.map(_.range(Math.floor(signal.length / anotherSignal.length)), function (value) {
-        return signal.slice(value * anotherSignal.length, (value + 1) * anotherSignal.length);
+      signal = _.map(_.range(Math.ceil(signal.length / anotherSignal.length)), function (value) {
+        return signal.slice(value * anotherSignal.length, 1 + (value + 1) * anotherSignal.length);
       });
     } else {
       signal = [signal];
@@ -119,10 +120,9 @@ module.exports = {
     var correlation = _.reduce(signal, function (acc, partialSignal) {
 
       return acc.concat(_.map(partialSignal, function (value, index) {
-
         return _.reduce(anotherSignal, function (acc2, val2, index2) {
           var realIndex = (index + index2) % anotherSignal.length;
-          var partialSignalValue = withNoise ? mathHelpers.average(partialSignal[index2]) : partialSignal[index2];
+          var partialSignalValue = partialSignal[index2];
 
           return acc2 + partialSignalValue * anotherSignal[realIndex];
         }, 0);
@@ -133,6 +133,18 @@ module.exports = {
 
 
     return correlation;
+  },
+
+  LPF: function (values, smoothing) {
+    var startValue = values[0];
+    return _.map(values, function (value, index) {
+      if (index === 0) {
+        return startValue;
+      } else {
+        startValue += (value - startValue) / smoothing;
+        return startValue;
+      }
+    });
   }
 
 };
