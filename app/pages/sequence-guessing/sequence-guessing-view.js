@@ -74,7 +74,7 @@ module.exports = React.createClass({
         <LinearGraph data={signal} width={800} height={400}/>
 
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers}/>
-        <div className={classes}>{sequence.join('')}</div>
+        <pre className={classes}>{sequence.join('')}</pre>
         <Button name="Init chain with feedback" handler={this.initSequence}/>
 
         <LinearGraph data={correlation} xOffset={50} width={800} height={400}/>

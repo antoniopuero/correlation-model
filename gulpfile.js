@@ -225,7 +225,7 @@ gulp.task('serve', ['default'], function () {
   nodemon({
     script: 'app.js'
     , ext: 'js jade'
-    , env: { 'NODE_ENV': 'development' }
+    , env: { 'nodemon_start': true}
   }).on('restart', function () {
     livereload();
   });

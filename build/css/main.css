@@ -35,6 +35,10 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+body {
+  font-size: 16px !important;
+}
+
 
 .horizontal-slider {
   width: 100%;
@@ -77,8 +81,6 @@
   font-weight: bold;
 }
 
-
-
 .sequence-wrapper {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -99,6 +101,10 @@
 .signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper .white-holder {
   width: 27%;
 }
+.signal-with-sequence-container pre {
+  word-break: break-all;
+}
+
 
 .uneditable input {
   display: none;

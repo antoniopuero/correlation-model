@@ -52,20 +52,23 @@ module.exports = React.createClass({
     return (
       <div className="signal-with-sequence-container">
         <h2>{texts.signalWithSequence.heading}</h2>
-        <p>{texts.signalWithSequence.introPart}</p>
-        <PrincipalSchema highlighted={['data-generator', 'prn-generator', 'xor']}/>
+        <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.introPart}}></p>
         <LinearGraph data={signal} width={800} height={400} withoutBrush={true} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.signalCapture}</p>
-        <p>{texts.signalWithSequence.aboutPRNCode}</p>
+        <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutPRNCode}}></p>
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={'static'} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers} uneditable={true}/>
 
-        <Button name="One step" handler={this.proceedChain}/>
+        <Button name={texts.signalWithSequence.nextStep} handler={this.proceedChain}/>
 
+        <pre>{sequence.join('')}</pre>
         <LinearGraph data={sequence} width={800} height={400} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.PRNCapture}</p>
-        <p>{texts.signalWithSequence.aboutMixingSignalWithPRN}</p>
+        <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}></p>
         <LinearGraph data={signalWithSequence} width={800} height={400} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.signalWithSequenceCapture}</p>
+        <PrincipalSchema highlighted={['data-generator', 'prn-generator', 'xor']}/>
+        <p className="text-center">{texts.signalWithSequence.principalSchemaCapture}</p>
+        <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutPrincipalSchema}}></p>
       </div>
     );
   }
