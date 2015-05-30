@@ -44,7 +44,7 @@ module.exports = {getRandomSignal: function() {
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/constants/signals.js
 },{"lodash":39}],6:[function(require,module,exports){
 "use strict";
-var hardcodedChains = [[10, [2, 3, 8, 10]], [10, [1, 3, 7, 10]], [10, [1, 4, 9, 10]], [10, [1, 6, 9, 10]], [10, [1, 5, 8, 10]], [10, [1, 6, 8, 10]], [10, [3, 10]], [10, [7, 10]]];
+var hardcodedChains = [[10, [3, 10]], [10, [7, 10]]];
 module.exports = {getRandomChain: function() {
     var index = Math.floor(Math.random() * hardcodedChains.length);
     var chain = hardcodedChains[index];
@@ -330,7 +330,7 @@ module.exports = React.createClass({
       newSequenceId: newSequenceId,
       triggerValues: triggerValues,
       feedbackTriggers: feedbackTriggers
-    }), React.createElement("div", {className: classes}, sequence.join('')), React.createElement(Button, {
+    }), React.createElement("pre", {className: classes}, sequence.join('')), React.createElement(Button, {
       name: "Init chain with feedback",
       handler: this.initSequence
     }), React.createElement(LinearGraph, {
@@ -472,13 +472,13 @@ module.exports = React.createClass({
         maxStep = $__0.maxStep,
         triggerValues = $__0.triggerValues,
         feedbackTriggers = $__0.feedbackTriggers;
-    return (React.createElement("div", {className: "signal-with-sequence-container"}, React.createElement("h2", null, texts.signalWithSequence.heading), React.createElement("p", null, texts.signalWithSequence.introPart), React.createElement(PrincipalSchema, {highlighted: ['data-generator', 'prn-generator', 'xor']}), React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "signal-with-sequence-container"}, React.createElement("h2", null, texts.signalWithSequence.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.introPart}}), React.createElement(LinearGraph, {
       data: signal,
       width: 800,
       height: 400,
       withoutBrush: true,
       emulateBars: true
-    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalCapture), React.createElement("p", null, texts.signalWithSequence.aboutPRNCode), React.createElement(TriggerChain, {
+    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutPRNCode}}), React.createElement(TriggerChain, {
       chainLength: triggerChainLength,
       step: step,
       maxStep: maxStep,
@@ -487,19 +487,19 @@ module.exports = React.createClass({
       feedbackTriggers: feedbackTriggers,
       uneditable: true
     }), React.createElement(Button, {
-      name: "One step",
+      name: texts.signalWithSequence.nextStep,
       handler: this.proceedChain
-    }), React.createElement(LinearGraph, {
+    }), React.createElement("pre", null, sequence.join('')), React.createElement(LinearGraph, {
       data: sequence,
       width: 800,
       height: 400,
       emulateBars: true
-    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.PRNCapture), React.createElement("p", null, texts.signalWithSequence.aboutMixingSignalWithPRN), React.createElement(LinearGraph, {
+    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.PRNCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}), React.createElement(LinearGraph, {
       data: signalWithSequence,
       width: 800,
       height: 400,
       emulateBars: true
-    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalWithSequenceCapture)));
+    }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalWithSequenceCapture), React.createElement(PrincipalSchema, {highlighted: ['data-generator', 'prn-generator', 'xor']}), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.principalSchemaCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutPrincipalSchema}})));
   }
 });
 
@@ -539,6 +539,13 @@ module.exports = {
       n += 1;
     }
     return Math.pow(2, n + 1);
+  },
+  integrate: function(data, period) {
+    var self = this;
+    var count = Math.floor(data.length / period);
+    return _.map(_.range(count), function(index) {
+      return self.add(_.slice(data, index * period, (index + 1) * period));
+    });
   }
 };
 
@@ -633,10 +640,10 @@ module.exports = {
     });
     return zerosCount === onesCount;
   },
-  correlation: function(signal, anotherSignal, withNoise) {
+  correlation: function(signal, anotherSignal) {
     if (signal.length != anotherSignal.length) {
-      signal = _.map(_.range(Math.floor(signal.length / anotherSignal.length)), function(value) {
-        return signal.slice(value * anotherSignal.length, (value + 1) * anotherSignal.length);
+      signal = _.map(_.range(Math.ceil(signal.length / anotherSignal.length)), function(value) {
+        return signal.slice(value * anotherSignal.length, 1 + (value + 1) * anotherSignal.length);
       });
     } else {
       signal = [signal];
@@ -645,12 +652,23 @@ module.exports = {
       return acc.concat(_.map(partialSignal, function(value, index) {
         return _.reduce(anotherSignal, function(acc2, val2, index2) {
           var realIndex = (index + index2) % anotherSignal.length;
-          var partialSignalValue = withNoise ? mathHelpers.average(partialSignal[index2]) : partialSignal[index2];
+          var partialSignalValue = partialSignal[index2];
           return acc2 + partialSignalValue * anotherSignal[realIndex];
         }, 0);
       }));
     }, []);
     return correlation;
+  },
+  LPF: function(values, smoothing) {
+    var startValue = values[0];
+    return _.map(values, function(value, index) {
+      if (index === 0) {
+        return startValue;
+      } else {
+        startValue += (value - startValue) / smoothing;
+        return startValue;
+      }
+    });
   }
 };
 
@@ -910,12 +928,13 @@ var actions = require('../actions/cdma-actions');
 var _ = require('lodash');
 var processTriggerChain = require('../processing/trigger-chain');
 var signalHelpers = require('../processing/signal-helpers');
+var mathHelpers = require('../processing/math-helpers');
 module.exports = (function() {
-  var firstChain = [5, [2, 5]],
-      firstSignal = [1, 0, 1, 1, 0],
+  var firstChain = [5, [3, 5]],
+      firstSignal = [0, 1, 0, 1, 0],
       firstChainInAction = processTriggerChain(),
-      secondRandomChain = [5, [3, 5]],
-      secondSignal = [1, 1, 0, 1, 0],
+      secondRandomChain = [5, [2, 3, 4, 5]],
+      secondSignal = [1, 0, 1, 0, 1],
       secondChainInAction = processTriggerChain(),
       dynamicChain = processTriggerChain(),
       carrier = signalHelpers.generateSin(10),
@@ -939,10 +958,12 @@ module.exports = (function() {
   secondSignalWithSequence = signalHelpers.mixSignalWithMSequence(secondSignal, secondRefSequence);
   firstSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstSignalWithSequence), carrier, carrier.length);
   secondSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondSignalWithSequence), carrier, carrier.length);
-  mixedSignal = signalHelpers.addSignals([firstSignalOnCarrier, secondSignalOnCarrier], 9);
-  mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 1);
-  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
-  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
+  mixedSignal = signalHelpers.addSignals([firstSignalOnCarrier, secondSignalOnCarrier]);
+  mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
+  var firstSignalWithNoise = signalHelpers.addRandomNoise(firstSignalOnCarrier, 2);
+  var secondSignalWithNoise = signalHelpers.addRandomNoise(secondSignalOnCarrier, 2);
+  var firstSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(firstSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier), carrier.length);
+  var secondSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(secondSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier), carrier.length);
   return flux.createStore({
     triggerChain: firstChain,
     signal: firstSignal,
@@ -971,12 +992,12 @@ module.exports = (function() {
     },
     updatePhaseFirstSignal: function(phase) {
       this.firstPhase = phase;
-      this.firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase));
+      this.firstSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(firstSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase)), carrier.length);
       this.emitChange();
     },
     updatePhaseSecondSignal: function(phase) {
       this.secondPhase = phase;
-      this.secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase));
+      this.secondSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(secondSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase)), carrier.length);
       this.emitChange();
     },
     stepForward: function() {
@@ -1046,7 +1067,7 @@ module.exports = (function() {
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/stores/cdma-store.js
-},{"../actions/cdma-actions":2,"../processing/signal-helpers":14,"../processing/trigger-chain":16,"flux-react":36,"lodash":39}],20:[function(require,module,exports){
+},{"../actions/cdma-actions":2,"../processing/math-helpers":13,"../processing/signal-helpers":14,"../processing/trigger-chain":16,"flux-react":36,"lodash":39}],20:[function(require,module,exports){
 "use strict";
 'use strict';
 var flux = require('flux-react');
