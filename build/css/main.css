@@ -39,7 +39,6 @@ body {
   font-size: 16px !important;
 }
 
-
 .horizontal-slider {
   width: 100%;
   max-width: 500px;
@@ -81,6 +80,8 @@ body {
   font-weight: bold;
 }
 
+
+
 .sequence-wrapper {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -103,11 +104,6 @@ body {
 }
 .signal-with-sequence-container pre {
   word-break: break-all;
-}
-
-
-.uneditable input {
-  display: none;
 }
 
 .input-section {
@@ -240,6 +236,10 @@ body {
 }
 .trigger .checkbox.checked .line-through {
   display: inline-block;
+}
+
+.uneditable input {
+  display: none;
 }
 
 .trigger-chain-wrapper {

@@ -111,7 +111,7 @@ module.exports = {
 
     if (signal.length != anotherSignal.length) {
       signal = _.map(_.range(Math.ceil(signal.length / anotherSignal.length)), function (value) {
-        return signal.slice(value * anotherSignal.length, 1 + (value + 1) * anotherSignal.length);
+        return signal.slice(value * anotherSignal.length, (value + 1) * anotherSignal.length);
       });
     } else {
       signal = [signal];

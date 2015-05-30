@@ -44,7 +44,7 @@ module.exports = {getRandomSignal: function() {
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/constants/signals.js
 },{"lodash":39}],6:[function(require,module,exports){
 "use strict";
-var hardcodedChains = [[10, [3, 10]], [10, [7, 10]]];
+var hardcodedChains = [[10, [2, 3, 8, 10]], [10, [1, 3, 7, 10]], [10, [1, 4, 9, 10]], [10, [1, 6, 9, 10]], [10, [1, 5, 8, 10]], [10, [1, 6, 8, 10]], [10, [3, 10]], [10, [7, 10]]];
 module.exports = {getRandomChain: function() {
     var index = Math.floor(Math.random() * hardcodedChains.length);
     var chain = hardcodedChains[index];
@@ -643,7 +643,7 @@ module.exports = {
   correlation: function(signal, anotherSignal) {
     if (signal.length != anotherSignal.length) {
       signal = _.map(_.range(Math.ceil(signal.length / anotherSignal.length)), function(value) {
-        return signal.slice(value * anotherSignal.length, 1 + (value + 1) * anotherSignal.length);
+        return signal.slice(value * anotherSignal.length, (value + 1) * anotherSignal.length);
       });
     } else {
       signal = [signal];
