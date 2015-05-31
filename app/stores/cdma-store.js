@@ -123,7 +123,7 @@ module.exports = (function () {
         return this.sequence;
       },
       getSignalWithSequence: function () {
-        return this.signalWithSequence;
+        return firstSignalWithSequence;
       },
       getCarrier: function () {
         return this.carrier;

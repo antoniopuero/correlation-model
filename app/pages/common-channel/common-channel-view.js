@@ -37,7 +37,7 @@ module.exports = React.createClass({
     return (
       <div className="common-channel-container">
         <h2>{texts.commonChannel.heading}</h2>
-        <p>{texts.commonChannel.introPart}</p>
+        <p dangerouslySetInnerHTML={{__html: texts.commonChannel.introPart}}></p>
         <LinearGraph data={firstSignalOnCarrier} width={800} height={400}/>
         <p className="text-center">{texts.commonChannel.firstSignalOnCarrierCapture}</p>
         <LinearGraph data={secondSignalOnCarrier} width={800} height={400}/>

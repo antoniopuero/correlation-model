@@ -70,18 +70,24 @@ module.exports = React.createClass({
 
     return (
       <div className="sequence-guessing-container">
+        <h2>{texts.sequenceGuessing.heading}</h2>
+        <p dangerouslySetInnerHTML={{__html: texts.sequenceGuessing.introPart}}></p>
 
         <LinearGraph data={signal} width={800} height={400}/>
+        <p className="text-center">{texts.sequenceGuessing.commonChannelCaption}</p>
 
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers}/>
         <pre className={classes}>{sequence.join('')}</pre>
-        <Button name="Init chain with feedback" handler={this.initSequence}/>
+        <Button name={texts.sequenceGuessing.sequenceInitButton} handler={this.initSequence}/>
 
         <LinearGraph data={correlation} xOffset={50} width={800} height={400}/>
+
+        <p dangerouslySetInnerHTML={{__html: texts.sequenceGuessing.inputSignals}}></p>
+
         <InputSection userInputSignals={userInputSignals} signalCorrectnessArray={signalCorrectnessArray}/>
 
         <form action="/finished" method="POST" className={correct}>
-          <button type="submit" className="btn btn-primary btn-lg">{texts.commonTexts.finishButton}</button>
+          <button type="submit" className="btn btn-primary btn-lg pull-right">{texts.commonTexts.finishButton}</button>
         </form>
 
       </div>

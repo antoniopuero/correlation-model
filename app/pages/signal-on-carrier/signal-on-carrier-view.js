@@ -38,13 +38,15 @@ module.exports = React.createClass({
     return (
       <div className="signal-on-carrier-container">
         <h2>{texts.signalOnCarrier.heading}</h2>
-        <p>{texts.signalOnCarrier.introPart}</p>
-
-        <PrincipalSchema highlighted={['carrier-generator', 'multiply', 'xor']}/>
+        <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.introPart}}></p>
 
         <LinearGraph data={signalWithSequence} width={800} height={400} emulateBars={true}/>
         <p className="text-center">{texts.signalOnCarrier.signalWithSequenceCapture}</p>
-        <p>{texts.signalOnCarrier.aboutCarrying}</p>
+
+        <PrincipalSchema highlighted={['carrier-generator', 'multiply', 'xor']}/>
+        <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.aboutCarrying}}></p>
+
+
         <LinearGraph data={carrier} width={800} height={400} withoutBrush={true}/>
         <p className="text-center">{texts.signalOnCarrier.carrierCaption}</p>
         <LinearGraph data={signalOnCarrier} width={800} height={400}/>

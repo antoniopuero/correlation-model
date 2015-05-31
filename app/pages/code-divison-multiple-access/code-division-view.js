@@ -51,7 +51,7 @@ module.exports = React.createClass({
       <div className="common-channel-with-noise-container">
         <h2>{texts.CDMA.heading}</h2>
 
-        <p>{texts.CDMA.introPart}</p>
+        <p dangerouslySetInnerHTML={{__html: texts.CDMA.introPart}}></p>
         <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400}/>
 
         <p className="text-center">{texts.CDMA.signalWithNoiseInCommonChannelCaption}</p>
