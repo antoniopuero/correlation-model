@@ -106,7 +106,7 @@ module.exports = React.createClass({
         firstPhase = $__0.firstPhase,
         secondPhase = $__0.secondPhase,
         texts = $__0.texts;
-    return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.CDMA.heading), React.createElement("p", null, texts.CDMA.introPart), React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.CDMA.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.CDMA.introPart}}), React.createElement(LinearGraph, {
       data: commonChannelSignalWithNoise,
       width: 800,
       height: 400
@@ -173,7 +173,7 @@ module.exports = React.createClass({
         commonChannelSignal = $__0.commonChannelSignal,
         commonChannelSignalWithNoise = $__0.commonChannelSignalWithNoise,
         texts = $__0.texts;
-    return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.commonChannelWithNoise.heading), React.createElement("p", null, texts.commonChannelWithNoise.introPart), React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.commonChannelWithNoise.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.commonChannelWithNoise.introPart}}), React.createElement(LinearGraph, {
       data: commonChannelSignal,
       width: 800,
       height: 400
@@ -226,7 +226,7 @@ module.exports = React.createClass({
         secondSignalOnCarrier = $__0.secondSignalOnCarrier,
         commonChannelSignal = $__0.commonChannelSignal,
         texts = $__0.texts;
-    return (React.createElement("div", {className: "common-channel-container"}, React.createElement("h2", null, texts.commonChannel.heading), React.createElement("p", null, texts.commonChannel.introPart), React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "common-channel-container"}, React.createElement("h2", null, texts.commonChannel.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.commonChannel.introPart}}), React.createElement(LinearGraph, {
       data: firstSignalOnCarrier,
       width: 800,
       height: 400
@@ -319,11 +319,11 @@ module.exports = React.createClass({
         triggerValues = $__0.triggerValues,
         feedbackTriggers = $__0.feedbackTriggers,
         texts = $__0.texts;
-    return (React.createElement("div", {className: "sequence-guessing-container"}, React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "sequence-guessing-container"}, React.createElement("h2", null, texts.sequenceGuessing.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.sequenceGuessing.introPart}}), React.createElement(LinearGraph, {
       data: signal,
       width: 800,
       height: 400
-    }), React.createElement(TriggerChain, {
+    }), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.commonChannelCaption), React.createElement(TriggerChain, {
       chainLength: triggerChainLength,
       step: step,
       maxStep: maxStep,
@@ -331,14 +331,14 @@ module.exports = React.createClass({
       triggerValues: triggerValues,
       feedbackTriggers: feedbackTriggers
     }), React.createElement("pre", {className: classes}, sequence.join('')), React.createElement(Button, {
-      name: "Init chain with feedback",
+      name: texts.sequenceGuessing.sequenceInitButton,
       handler: this.initSequence
     }), React.createElement(LinearGraph, {
       data: correlation,
       xOffset: 50,
       width: 800,
       height: 400
-    }), React.createElement(InputSection, {
+    }), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.sequenceGuessing.inputSignals}}), React.createElement(InputSection, {
       userInputSignals: userInputSignals,
       signalCorrectnessArray: signalCorrectnessArray
     }), React.createElement("form", {
@@ -347,7 +347,7 @@ module.exports = React.createClass({
       className: correct
     }, React.createElement("button", {
       type: "submit",
-      className: "btn btn-primary btn-lg"
+      className: "btn btn-primary btn-lg pull-right"
     }, texts.commonTexts.finishButton))));
   }
 });
@@ -394,12 +394,12 @@ module.exports = React.createClass({
         signalOnCarrier = $__0.signalOnCarrier,
         carrier = $__0.carrier,
         texts = $__0.texts;
-    return (React.createElement("div", {className: "signal-on-carrier-container"}, React.createElement("h2", null, texts.signalOnCarrier.heading), React.createElement("p", null, texts.signalOnCarrier.introPart), React.createElement(PrincipalSchema, {highlighted: ['carrier-generator', 'multiply', 'xor']}), React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "signal-on-carrier-container"}, React.createElement("h2", null, texts.signalOnCarrier.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalOnCarrier.introPart}}), React.createElement(LinearGraph, {
       data: signalWithSequence,
       width: 800,
       height: 400,
       emulateBars: true
-    }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.signalWithSequenceCapture), React.createElement("p", null, texts.signalOnCarrier.aboutCarrying), React.createElement(LinearGraph, {
+    }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.signalWithSequenceCapture), React.createElement(PrincipalSchema, {highlighted: ['carrier-generator', 'multiply', 'xor']}), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalOnCarrier.aboutCarrying}}), React.createElement(LinearGraph, {
       data: carrier,
       width: 800,
       height: 400,
@@ -1017,7 +1017,7 @@ module.exports = (function() {
         return this.sequence;
       },
       getSignalWithSequence: function() {
-        return this.signalWithSequence;
+        return firstSignalWithSequence;
       },
       getCarrier: function() {
         return this.carrier;
@@ -1583,7 +1583,7 @@ module.exports = React.createClass({
     }));
   },
   render: function() {
-    return (React.createElement("div", {className: "trigger-chain-wrapper"}, React.createElement("span", {className: "feedback-line"}), React.createElement("div", {className: "row trigger-chain"}, _.map(this.state.triggerValues, this.renderTrigger)), React.createElement("div", {className: "xor-wrapper"}, React.createElement("span", {className: "xor"}, "+"), React.createElement("div", {className: "white-holder"}))));
+    return (React.createElement("div", {className: "trigger-chain-wrapper"}, React.createElement("span", {className: "feedback-line"}), React.createElement("div", {className: "row trigger-chain"}, _.map(this.state.triggerValues, this.renderTrigger)), React.createElement("span", {className: "line-out"}), React.createElement("div", {className: "xor-wrapper"}, React.createElement("span", {className: "xor"}, "+"), React.createElement("div", {className: "white-holder"}))));
   }
 });
 

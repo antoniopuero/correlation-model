@@ -38,6 +38,10 @@
 body {
   font-size: 16px !important;
 }
+.btn {
+  margin-top: 20px;
+  margin-bottom: 20px !important;
+}
 
 .horizontal-slider {
   width: 100%;
@@ -95,6 +99,9 @@ body {
 
 .signal-with-sequence-container .trigger-chain-wrapper .feedback-line {
   width: 14%;
+}
+.signal-with-sequence-container .trigger-chain-wrapper .line-out {
+  right: 16%;
 }
 .signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper {
   width: 60%;
@@ -227,7 +234,7 @@ body {
 }
 .trigger .checkbox {
   position: absolute;
-  bottom: -94px;
+  bottom: -98px;
   height: 80px;
 }
 .trigger .checkbox .line-through {
@@ -251,11 +258,19 @@ body {
   position: absolute;
   height: 150px;
   left: 8%;
-  top: 55px;
+  top: 57px;
   width: 5%;
   border-left: 1px solid black;
   border-top: 1px solid black;
   border-bottom: 1px solid black;
+}
+.trigger-chain-wrapper .line-out {
+  display: inline-block;
+  position: absolute;
+  width: 10%;
+  border-bottom: 1px solid black;
+  top: 60px;
+  right: 8%;
 }
 .trigger-chain-wrapper .trigger-chain {
   display: table;
@@ -272,14 +287,14 @@ body {
 .trigger-chain-wrapper .xor-wrapper .xor {
   display: inline-block;
   position: absolute;
-  top: -19px;
+  top: -20px;
   background: white;
   width: 40px;
   height: 40px;
   border: 1px solid black;
   border-radius: 20px;
   font-size: 40px;
-  line-height: 33px;
+  line-height: 30px;
   vertical-align: middle;
   font-weight: bold;
 }
@@ -287,7 +302,7 @@ body {
   display: inline-block;
   position: absolute;
   background: white;
-  width: 21%;
+  width: 20%;
   height: 4px;
   top: -2px;
   right: -7%;
