@@ -117,6 +117,7 @@ module.exports = {
       signal = [signal];
     }
 
+
     var correlation = _.reduce(signal, function (acc, partialSignal) {
 
       return acc.concat(_.map(partialSignal, function (value, index) {
@@ -131,20 +132,7 @@ module.exports = {
 
     }, []);
 
-
     return correlation;
-  },
-
-  LPF: function (values, smoothing) {
-    var startValue = values[0];
-    return _.map(values, function (value, index) {
-      if (index === 0) {
-        return startValue;
-      } else {
-        startValue += (value - startValue) / smoothing;
-        return startValue;
-      }
-    });
   }
 
 };

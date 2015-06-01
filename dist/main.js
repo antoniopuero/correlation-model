@@ -12,7 +12,7 @@ Router.run(routes, function(Handler) {
 },{"./routes":18,"react":255,"react-router":85}],2:[function(require,module,exports){
 "use strict";
 var flux = require('flux-react');
-module.exports = flux.createActions(['updatePhaseFirstSignal', 'updatePhaseSecondSignal', 'stepForward']);
+module.exports = flux.createActions(['updateNoiseAmplitude', 'stepForward']);
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/actions/cdma-actions.js
@@ -71,8 +71,7 @@ module.exports = React.createClass({
       commonChannelSignalWithNoise: Store.getCommonChannelSignalWithNoise(),
       firstSignalCorrelation: Store.getFirstSignalCorrelation(),
       secondSignalCorrelation: Store.getSecondSignalCorrelation(),
-      firstPhase: Store.getFirstSignalPhase(),
-      secondPhase: Store.getSecondSignalPhase(),
+      noiseAmplitude: Store.getNoiseAmplitude(),
       texts: MainStore.getTexts()
     };
   },
@@ -87,15 +86,11 @@ module.exports = React.createClass({
       commonChannelSignalWithNoise: Store.getCommonChannelSignalWithNoise(),
       firstSignalCorrelation: Store.getFirstSignalCorrelation(),
       secondSignalCorrelation: Store.getSecondSignalCorrelation(),
-      firstPhase: Store.getFirstSignalPhase(),
-      secondPhase: Store.getSecondSignalPhase()
+      noiseAmplitude: Store.getNoiseAmplitude()
     });
   },
-  changeFirstPhase: function(value) {
-    actions.updatePhaseFirstSignal(value);
-  },
-  changeSecondPhase: function(value) {
-    actions.updatePhaseSecondSignal(value);
+  changeNoiseAmplitude: function(value) {
+    actions.updateNoiseAmplitude(value);
   },
   render: function() {
     var self = this;
@@ -103,10 +98,16 @@ module.exports = React.createClass({
         commonChannelSignalWithNoise = $__0.commonChannelSignalWithNoise,
         firstSignalCorrelation = $__0.firstSignalCorrelation,
         secondSignalCorrelation = $__0.secondSignalCorrelation,
-        firstPhase = $__0.firstPhase,
-        secondPhase = $__0.secondPhase,
+        noiseAmplitude = $__0.noiseAmplitude,
         texts = $__0.texts;
-    return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.CDMA.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.CDMA.introPart}}), React.createElement(LinearGraph, {
+    return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.CDMA.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.CDMA.introPart}}), React.createElement("div", {className: "noise-changer"}, React.createElement("span", {className: "noise-value"}, "A", React.createElement("sub", null, "noise"), " = ", noiseAmplitude), React.createElement(ReactSlider, {
+      className: "horizontal-slider",
+      value: noiseAmplitude,
+      min: 0,
+      max: 25,
+      onAfterChange: this.changeNoiseAmplitude,
+      withBars: true
+    })), React.createElement(LinearGraph, {
       data: commonChannelSignalWithNoise,
       width: 800,
       height: 400
@@ -114,25 +115,11 @@ module.exports = React.createClass({
       data: firstSignalCorrelation,
       width: 800,
       height: 400
-    }), React.createElement("div", {className: "phase-changer"}, React.createElement("span", {className: "phase-value"}, "Θ", React.createElement("sub", null, "1"), " = ", firstPhase, React.createElement("sup", null, "o")), React.createElement(ReactSlider, {
-      className: "horizontal-slider",
-      value: firstPhase,
-      min: 0,
-      max: 180,
-      onAfterChange: this.changeFirstPhase,
-      withBars: true
-    })), React.createElement("p", {className: "text-center"}, texts.CDMA.firstSignalCorrelationCapture), React.createElement(LinearGraph, {
+    }), React.createElement("p", {className: "text-center"}, texts.CDMA.firstSignalCorrelationCapture), React.createElement(LinearGraph, {
       data: secondSignalCorrelation,
       width: 800,
       height: 400
-    }), React.createElement("div", {className: "phase-changer"}, React.createElement("span", {className: "phase-value"}, "Θ", React.createElement("sub", null, "2"), " = ", secondPhase, React.createElement("sup", null, "o")), React.createElement(ReactSlider, {
-      className: "horizontal-slider",
-      value: secondPhase,
-      min: 0,
-      max: 180,
-      onAfterChange: this.changeSecondPhase,
-      withBars: true
-    })), React.createElement("p", {className: "text-center"}, texts.CDMA.secondSignalCorrelationCapture)));
+    }), React.createElement("p", {className: "text-center"}, texts.CDMA.secondSignalCorrelationCapture)));
   }
 });
 
@@ -658,17 +645,6 @@ module.exports = {
       }));
     }, []);
     return correlation;
-  },
-  LPF: function(values, smoothing) {
-    var startValue = values[0];
-    return _.map(values, function(value, index) {
-      if (index === 0) {
-        return startValue;
-      } else {
-        startValue += (value - startValue) / smoothing;
-        return startValue;
-      }
-    });
   }
 };
 
@@ -960,10 +936,8 @@ module.exports = (function() {
   secondSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondSignalWithSequence), carrier, carrier.length);
   mixedSignal = signalHelpers.addSignals([firstSignalOnCarrier, secondSignalOnCarrier]);
   mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
-  var firstSignalWithNoise = signalHelpers.addRandomNoise(firstSignalOnCarrier, 2);
-  var secondSignalWithNoise = signalHelpers.addRandomNoise(secondSignalOnCarrier, 2);
-  var firstSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(firstSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier), carrier.length);
-  var secondSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(secondSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier), carrier.length);
+  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
+  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
   return flux.createStore({
     triggerChain: firstChain,
     signal: firstSignal,
@@ -973,31 +947,21 @@ module.exports = (function() {
     firstSignalOnCarrier: firstSignalOnCarrier,
     secondSignalOnCarrier: secondSignalOnCarrier,
     mixedSignal: mixedSignal,
-    mixedSignalWithNoise: _.flatten(mixedSignalWithNoise),
+    mixedSignalWithNoise: mixedSignalWithNoise,
     firstSignalCorrelation: firstSignalCorrelation,
     secondSignalCorrelation: secondSignalCorrelation,
-    firstPhase: 0,
-    secondPhase: 0,
     step: 0,
     maxStep: Math.pow(2, firstChain[0]) - 1,
     triggerChainLength: firstChain[0],
     triggerValues: dynamicChain.getChainSnapshot(),
     feedbackTriggers: firstChain[1],
-    actions: [actions.stepForward, actions.updatePhaseFirstSignal, actions.updatePhaseSecondSignal],
-    calculateCorrelation: function() {
-      if (this.sequence.length) {
-        this.isMSequence = signalHelpers.isMSequence(this.sequence);
-        this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
-      }
-    },
-    updatePhaseFirstSignal: function(phase) {
-      this.firstPhase = phase;
-      this.firstSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(firstSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase)), carrier.length);
-      this.emitChange();
-    },
-    updatePhaseSecondSignal: function(phase) {
-      this.secondPhase = phase;
-      this.secondSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(secondSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase)), carrier.length);
+    noiseAmplitude: 2,
+    actions: [actions.stepForward, actions.updateNoiseAmplitude],
+    updateNoiseAmplitude: function(amplitude) {
+      this.noiseAmplitude = amplitude;
+      this.mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, amplitude);
+      this.firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
+      this.secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
       this.emitChange();
     },
     stepForward: function() {
@@ -1040,12 +1004,6 @@ module.exports = (function() {
       getSecondSignalCorrelation: function() {
         return this.secondSignalCorrelation;
       },
-      getFirstSignalPhase: function() {
-        return this.firstPhase;
-      },
-      getSecondSignalPhase: function() {
-        return this.secondPhase;
-      },
       getTriggerValues: function() {
         return this.triggerValues;
       },
@@ -1060,6 +1018,9 @@ module.exports = (function() {
       },
       getTriggerChainLength: function() {
         return this.triggerChainLength;
+      },
+      getNoiseAmplitude: function() {
+        return this.noiseAmplitude;
       }
     }
   });

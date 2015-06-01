@@ -52,12 +52,10 @@ module.exports = (function () {
   ]);
 
   mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
-  var firstSignalWithNoise = signalHelpers.addRandomNoise(firstSignalOnCarrier, 2);
-  var secondSignalWithNoise = signalHelpers.addRandomNoise(secondSignalOnCarrier, 2);
 
-  var firstSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(firstSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier), carrier.length);
+  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
 
-  var secondSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(secondSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier), carrier.length);
+  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
 
 
   return flux.createStore({
@@ -69,38 +67,27 @@ module.exports = (function () {
     firstSignalOnCarrier: firstSignalOnCarrier,
     secondSignalOnCarrier: secondSignalOnCarrier,
     mixedSignal: mixedSignal,
-    mixedSignalWithNoise: _.flatten(mixedSignalWithNoise),
+    mixedSignalWithNoise: mixedSignalWithNoise,
     firstSignalCorrelation: firstSignalCorrelation,
     secondSignalCorrelation: secondSignalCorrelation,
-    firstPhase: 0,
-    secondPhase: 0,
     step: 0,
     maxStep: Math.pow(2, firstChain[0]) - 1,
     triggerChainLength: firstChain[0],
     triggerValues: dynamicChain.getChainSnapshot(),
     feedbackTriggers: firstChain[1],
+    noiseAmplitude: 2,
     actions: [
       actions.stepForward,
-      actions.updatePhaseFirstSignal,
-      actions.updatePhaseSecondSignal
+      actions.updateNoiseAmplitude
     ],
 
-    calculateCorrelation: function () {
-      if (this.sequence.length) {
-        this.isMSequence = signalHelpers.isMSequence(this.sequence);
-        this.correlation = signalHelpers.correlation(signalHelpers.transformBinaryData(this.signal), signalHelpers.transformBinaryData(this.sequence));
-      }
-    },
+    updateNoiseAmplitude: function (amplitude) {
+      this.noiseAmplitude = amplitude;
+      this.mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, amplitude);
 
-    updatePhaseFirstSignal: function (phase) {
-      this.firstPhase = phase;
-      this.firstSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(firstSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase)), carrier.length);
-      this.emitChange();
-    },
+      this.firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
 
-    updatePhaseSecondSignal: function (phase) {
-      this.secondPhase = phase;
-      this.secondSignalCorrelation = signalHelpers.LPF(signalHelpers.multiplyWithCarrier(signalHelpers.correlation(secondSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), signalHelpers.generateSin(10, phase)), carrier.length);
+      this.secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
       this.emitChange();
     },
 
@@ -146,12 +133,6 @@ module.exports = (function () {
       getSecondSignalCorrelation: function () {
         return this.secondSignalCorrelation;
       },
-      getFirstSignalPhase: function () {
-        return this.firstPhase;
-      },
-      getSecondSignalPhase: function () {
-        return this.secondPhase;
-      },
       getTriggerValues: function () {
         return this.triggerValues;
       },
@@ -166,6 +147,9 @@ module.exports = (function () {
       },
       getTriggerChainLength: function () {
         return this.triggerChainLength;
+      },
+      getNoiseAmplitude: function () {
+        return this.noiseAmplitude;
       }
     }
   });
