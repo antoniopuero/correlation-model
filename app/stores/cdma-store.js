@@ -83,7 +83,11 @@ module.exports = (function () {
 
     updateNoiseAmplitude: function (amplitude) {
       this.noiseAmplitude = amplitude;
-      this.mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, amplitude);
+      if (amplitude) {
+        this.mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, amplitude);
+      } else {
+        this.mixedSignalWithNoise = mixedSignal;
+      }
 
       this.firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
 

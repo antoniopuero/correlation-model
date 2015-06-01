@@ -63,12 +63,12 @@ module.exports = {
     return _.map(_.range(maxSignalLength), function (index) {
       return _.reduce(signals, function (currentAcc, signal) {
 
-          if (signal[index]) {
-            return currentAcc + signal[index];
-          } else {
-            return currentAcc;
-          }
-        }, 0);
+        if (signal[index]) {
+          return currentAcc + signal[index];
+        } else {
+          return currentAcc;
+        }
+      }, 0);
     })
 
   },
@@ -92,9 +92,7 @@ module.exports = {
   addRandomNoise: function (signal, noiseAmplitude) {
     noiseAmplitude = noiseAmplitude ? noiseAmplitude : Math.max.apply(Math, signal);
     return _.map(signal, function (value, index) {
-      //return _.map(_.range(Math.ceil(Math.random() * 3)), function () {
-        return value + _.random(-noiseAmplitude/2, noiseAmplitude/2, true);
-      //});
+      return value + _.random(-noiseAmplitude / 2, noiseAmplitude / 2, true);
     });
   },
 
