@@ -11,8 +11,10 @@ module.exports = React.createClass({
   getInitialState: function () {
     return {
       commonChannelSignalWithNoise: Store.getCommonChannelSignalWithNoise(),
+      firstSignalCorrelationClear: Store.getFirstSignalCorrelationClear(),
       firstSignalCorrelation: Store.getFirstSignalCorrelation(),
-      secondSignalCorrelation: Store.getSecondSignalCorrelation(),
+      firstSignalCorrelationSpectrum: Store.getFirstSignalCorrelationSpectrum(),
+      firstSignalCorrelationMultipliedWithCarrierSpectrum: Store.getFirstSignalCorrelationMultipliedWithCarrierSpectrum(),
       noiseAmplitude: Store.getNoiseAmplitude(),
       texts: MainStore.getTexts()
     };
@@ -27,7 +29,9 @@ module.exports = React.createClass({
     this.setState({
       commonChannelSignalWithNoise: Store.getCommonChannelSignalWithNoise(),
       firstSignalCorrelation: Store.getFirstSignalCorrelation(),
-      secondSignalCorrelation: Store.getSecondSignalCorrelation(),
+      firstSignalCorrelationClear: Store.getFirstSignalCorrelationClear(),
+      firstSignalCorrelationSpectrum: Store.getFirstSignalCorrelationSpectrum(),
+      firstSignalCorrelationMultipliedWithCarrierSpectrum: Store.getFirstSignalCorrelationMultipliedWithCarrierSpectrum(),
       noiseAmplitude: Store.getNoiseAmplitude()
     });
   },
@@ -39,7 +43,7 @@ module.exports = React.createClass({
   render: function () {
     var self = this;
 
-    var {commonChannelSignalWithNoise, firstSignalCorrelation, secondSignalCorrelation, noiseAmplitude, texts} = this.state;
+    var {commonChannelSignalWithNoise, firstSignalCorrelation, firstSignalCorrelationClear, firstSignalCorrelationSpectrum, firstSignalCorrelationMultipliedWithCarrierSpectrum, noiseAmplitude, texts} = this.state;
 
     return (
       <div className="common-channel-with-noise-container">
@@ -56,12 +60,14 @@ module.exports = React.createClass({
         <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400}/>
 
         <p className="text-center">{texts.CDMA.signalWithNoiseInCommonChannelCaption}</p>
+
+        <LinearGraph data={firstSignalCorrelationClear} width={800} height={400}/>
+        <LinearGraph data={firstSignalCorrelationSpectrum} width={800} height={400}/>
+
         <LinearGraph data={firstSignalCorrelation} width={800} height={400}/>
+        <LinearGraph data={firstSignalCorrelationMultipliedWithCarrierSpectrum} width={800} height={400}/>
 
         <p className="text-center">{texts.CDMA.firstSignalCorrelationCapture}</p>
-        <LinearGraph data={secondSignalCorrelation} width={800} height={400}/>
-
-        <p className="text-center">{texts.CDMA.secondSignalCorrelationCapture}</p>
       </div>
     );
   }

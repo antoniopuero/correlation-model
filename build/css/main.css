@@ -98,13 +98,15 @@ body {
 
 
 .signal-with-sequence-container .trigger-chain-wrapper .feedback-line {
-  width: 14%;
+  width: 12%;
+  left: 6%;
 }
 .signal-with-sequence-container .trigger-chain-wrapper .line-out {
-  right: 16%;
+  right: 14%;
+  width: 8%;
 }
 .signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper {
-  width: 60%;
+  width: 70%;
 }
 .signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper .white-holder {
   width: 27%;
@@ -219,7 +221,7 @@ body {
   display: table-cell;
   position: relative;
   height: 90px;
-  border: 1px solid #ccc;
+  border: 4px solid black;
   vertical-align: middle;
 }
 .trigger .value {
@@ -243,7 +245,7 @@ body {
   left: 22px;
   bottom: -15px;
   height: 100%;
-  border-left: 1px solid black;
+  border-left: 4px solid black;
 }
 .trigger .checkbox.checked .line-through {
   display: inline-block;
@@ -259,16 +261,16 @@ body {
   height: 150px;
   left: 8%;
   top: 57px;
-  width: 5%;
-  border-left: 1px solid black;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  width: 3%;
+  border-left: 4px solid black;
+  border-top: 4px solid black;
+  border-bottom: 4px solid black;
 }
 .trigger-chain-wrapper .line-out {
   display: inline-block;
   position: absolute;
-  width: 10%;
-  border-bottom: 1px solid black;
+  width: 7%;
+  border-bottom: 4px solid black;
   top: 60px;
   right: 8%;
 }
@@ -282,7 +284,7 @@ body {
   display: inline-block;
   width: 83%;
   position: relative;
-  border-bottom: 1px solid black;
+  border-bottom: 4px solid black;
 }
 .trigger-chain-wrapper .xor-wrapper .xor {
   display: inline-block;
@@ -291,7 +293,7 @@ body {
   background: white;
   width: 40px;
   height: 40px;
-  border: 1px solid black;
+  border: 4px solid black;
   border-radius: 20px;
   font-size: 40px;
   line-height: 30px;
@@ -302,8 +304,8 @@ body {
   display: inline-block;
   position: absolute;
   background: white;
-  width: 20%;
-  height: 4px;
+  width: 16%;
+  height: 10px;
   top: -2px;
   right: -7%;
 }

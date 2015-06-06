@@ -13,6 +13,7 @@ module.exports = React.createClass({
       signalWithSequence: Store.getSignalWithSequence(),
       carrier: Store.getCarrier(),
       signalOnCarrier: Store.getFirstSignalOnCarrier(),
+      transformedSignal: Store.getTransformedSignal(),
       texts: MainStore.getTexts()
     };
   },
@@ -33,21 +34,25 @@ module.exports = React.createClass({
   render: function () {
     var self = this;
 
-    var {signalWithSequence, signalOnCarrier, carrier, texts} = this.state;
+    var {signalWithSequence, signalOnCarrier, carrier, texts, transformedSignal} = this.state;
 
     return (
       <div className="signal-on-carrier-container">
         <h2>{texts.signalOnCarrier.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.introPart}}></p>
 
-        <LinearGraph data={signalWithSequence} width={800} height={400} emulateBars={true}/>
+        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true}/>
         <p className="text-center">{texts.signalOnCarrier.signalWithSequenceCapture}</p>
 
         <PrincipalSchema highlighted={['carrier-generator', 'multiply', 'xor']}/>
         <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.aboutCarrying}}></p>
 
 
-        <LinearGraph data={carrier} width={800} height={400} withoutBrush={true}/>
+        <LinearGraph data={transformedSignal} width={800} height={300} emulateBars={true}/>
+        <p className="text-center">{texts.signalOnCarrier.transformedSignalCaption}</p>
+
+
+        <LinearGraph data={carrier} width={800} height={300} withoutBrush={true}/>
         <p className="text-center">{texts.signalOnCarrier.carrierCaption}</p>
         <LinearGraph data={signalOnCarrier} width={800} height={400}/>
         <p className="text-center">{texts.signalOnCarrier.signalOnCarrierCapture}</p>

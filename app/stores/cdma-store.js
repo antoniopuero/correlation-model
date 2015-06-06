@@ -5,6 +5,7 @@ var _ = require('lodash');
 var processTriggerChain = require('../processing/trigger-chain');
 var signalHelpers = require('../processing/signal-helpers');
 var mathHelpers = require('../processing/math-helpers');
+var FFT = require('../processing/fft');
 
 
 module.exports = (function () {
@@ -19,6 +20,7 @@ module.exports = (function () {
     carrier = signalHelpers.generateSin(10),
     firstRefSequence,
     secondRefSequence,
+    firstSignalTransformed,
     firstSignalOnCarrier,
     secondSignalOnCarrier,
     firstSignalWithSequence,
@@ -41,7 +43,8 @@ module.exports = (function () {
   firstSignalWithSequence = signalHelpers.mixSignalWithMSequence(firstSignal, firstRefSequence);
   secondSignalWithSequence = signalHelpers.mixSignalWithMSequence(secondSignal, secondRefSequence);
 
-  firstSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstSignalWithSequence), carrier, carrier.length);
+  firstSignalTransformed = signalHelpers.transformBinaryData(firstSignalWithSequence);
+  firstSignalOnCarrier = signalHelpers.addCarrier(firstSignalTransformed, carrier, carrier.length);
 
   secondSignalOnCarrier = signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondSignalWithSequence), carrier, carrier.length);
 
@@ -53,9 +56,11 @@ module.exports = (function () {
 
   mixedSignalWithNoise = signalHelpers.addRandomNoise(mixedSignal, 2);
 
-  var firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
+  var firstSignalCorrelation = signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length));
 
-  var secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
+  var firstSignalCorrelationMultipliedWithCarrier = signalHelpers.multiplyWithCarrier(firstSignalCorrelation, carrier);
+
+  var secondSignalCorrelationMultipliedWithCarrier = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
 
 
   return flux.createStore({
@@ -63,13 +68,18 @@ module.exports = (function () {
     signal: firstSignal,
     sequence: [],
     signalWithSequence: [],
+    spreadSignalSpectrum: FFT(firstSignalWithSequence),
     carrier: carrier,
+    firstSignalTransformed: firstSignalTransformed,
     firstSignalOnCarrier: firstSignalOnCarrier,
     secondSignalOnCarrier: secondSignalOnCarrier,
     mixedSignal: mixedSignal,
     mixedSignalWithNoise: mixedSignalWithNoise,
     firstSignalCorrelation: firstSignalCorrelation,
-    secondSignalCorrelation: secondSignalCorrelation,
+    firstSignalCorrelationSpectrum: FFT(firstSignalCorrelation),
+    firstSignalCorrelationMultipliedWithCarrier: firstSignalCorrelationMultipliedWithCarrier,
+    firstSignalCorrelationMultipliedWithCarrierSpectrum: FFT(firstSignalCorrelationMultipliedWithCarrier),
+    secondSignalCorrelationMultipliedWithCarrier: secondSignalCorrelationMultipliedWithCarrier,
     step: 0,
     maxStep: Math.pow(2, firstChain[0]) - 1,
     triggerChainLength: firstChain[0],
@@ -89,9 +99,12 @@ module.exports = (function () {
         this.mixedSignalWithNoise = mixedSignal;
       }
 
-      this.firstSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length)), carrier);
+      this.firstSignalCorrelation = signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(firstRefSequence), carrier, carrier.length));
 
-      this.secondSignalCorrelation = signalHelpers.multiplyWithCarrier(signalHelpers.correlation(this.mixedSignalWithNoise, signalHelpers.addCarrier(signalHelpers.transformBinaryData(secondRefSequence), carrier, carrier.length)), carrier);
+      this.firstSignalCorrelationMultipliedWithCarrier = signalHelpers.multiplyWithCarrier(this.firstSignalCorrelation, carrier);
+
+      this.firstSignalCorrelationSpectrum = FFT(this.firstSignalCorrelation);
+      this.firstSignalCorrelationMultipliedWithCarrierSpectrum = FFT(this.firstSignalCorrelationMultipliedWithCarrier);
       this.emitChange();
     },
 
@@ -131,11 +144,14 @@ module.exports = (function () {
       getCommonChannelSignalWithNoise: function () {
         return this.mixedSignalWithNoise;
       },
-      getFirstSignalCorrelation: function () {
+      getFirstSignalCorrelationClear: function () {
         return this.firstSignalCorrelation;
       },
+      getFirstSignalCorrelation: function () {
+        return this.firstSignalCorrelationMultipliedWithCarrier;
+      },
       getSecondSignalCorrelation: function () {
-        return this.secondSignalCorrelation;
+        return this.secondSignalCorrelationMultipliedWithCarrier;
       },
       getTriggerValues: function () {
         return this.triggerValues;
@@ -154,6 +170,18 @@ module.exports = (function () {
       },
       getNoiseAmplitude: function () {
         return this.noiseAmplitude;
+      },
+      getSpreadSignalSpectrum: function () {
+        return this.spreadSignalSpectrum;
+      },
+      getTransformedSignal: function () {
+        return this.firstSignalTransformed;
+      },
+      getFirstSignalCorrelationSpectrum: function () {
+        return this.firstSignalCorrelationSpectrum;
+      },
+      getFirstSignalCorrelationMultipliedWithCarrierSpectrum: function () {
+        return this.firstSignalCorrelationMultipliedWithCarrierSpectrum;
       }
     }
   });

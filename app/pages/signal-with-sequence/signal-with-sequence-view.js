@@ -19,6 +19,7 @@ module.exports = React.createClass({
       maxStep: Store.getMaxStep(),
       triggerValues: Store.getTriggerValues(),
       feedbackTriggers: Store.getFeedbackTriggers(),
+      spreadSignalSpectrum: Store.getSpreadSignalSpectrum(),
       texts: MainStore.getTexts()
     };
   },
@@ -47,13 +48,13 @@ module.exports = React.createClass({
   render: function () {
     var self = this;
 
-    var {signal, sequence, signalWithSequence, texts, triggerChainLength, step, maxStep, triggerValues, feedbackTriggers} = this.state;
+    var {signal, sequence, signalWithSequence, texts, triggerChainLength, step, maxStep, triggerValues, feedbackTriggers, spreadSignalSpectrum} = this.state;
 
     return (
       <div className="signal-with-sequence-container">
         <h2>{texts.signalWithSequence.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.introPart}}></p>
-        <LinearGraph data={signal} width={800} height={400} withoutBrush={true} emulateBars={true}/>
+        <LinearGraph data={signal} width={800} height={300} withoutBrush={true} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.signalCapture}</p>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutPRNCode}}></p>
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={'static'} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers} uneditable={true}/>
@@ -61,11 +62,15 @@ module.exports = React.createClass({
         <Button name={texts.signalWithSequence.nextStep} handler={this.proceedChain}/>
 
         <pre>{sequence.join('')}</pre>
-        <LinearGraph data={sequence} width={800} height={400} emulateBars={true}/>
+        <LinearGraph data={sequence} width={800} height={300} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.PRNCapture}</p>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}></p>
-        <LinearGraph data={signalWithSequence} width={800} height={400} emulateBars={true}/>
+        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true}/>
         <p className="text-center">{texts.signalWithSequence.signalWithSequenceCapture}</p>
+
+        <LinearGraph data={spreadSignalSpectrum} width={800} height={300}emulateBars={true}/>
+        <p className="text-center">{texts.signalWithSequence.signalWithSequenceSpectrumCapture}</p>
+
         <PrincipalSchema highlighted={['data-generator', 'prn-generator', 'xor']}/>
         <p className="text-center">{texts.signalWithSequence.principalSchemaCapture}</p>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutPrincipalSchema}}></p>

@@ -8,7 +8,7 @@ var hardcodedChains = [
   [10, [3, 10]],
   [10, [7, 10]]
 ];
-module.exports = {
+module.exports =  {
   getRandomChain: function () {
     var index = Math.floor(Math.random() * hardcodedChains.length);
     var chain = hardcodedChains[index];

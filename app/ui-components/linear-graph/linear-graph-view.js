@@ -18,8 +18,8 @@ module.exports = React.createClass({
 
       if (emulateBars) {
 
-        graphData.values = _.map(_.range(data.length * 10), function (index) {
-          return {x: index/10, y: data[Math.floor(index/10)]};
+        graphData.values = _.map(_.range(data.length * 20), function (index) {
+          return {x: index/20, y: data[Math.floor(index/20)]};
         });
 
       } else {
@@ -139,6 +139,7 @@ module.exports = React.createClass({
             margin={{top: 10, bottom: 50, left: 50, right: 20}}
             xScale={this.state.xScale}
             yScale={this.state.yScale}
+            xAxis={{label: "t, c"}}
             />
 
           <div className={classes} style={{float: 'none'}}>
