@@ -248,6 +248,7 @@ module.exports = React.createClass({
 },{"../../actions/cdma-actions":2,"../../stores/cdma-store":20,"../../stores/main-store":22,"../../ui-components/button/button-view":23,"../../ui-components/linear-graph/linear-graph-view":27,"classnames":33,"react":256}],10:[function(require,module,exports){
 "use strict";
 var React = require('react');
+var _ = require('lodash');
 var Store = require('../../stores/guessing-store');
 var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/guessing-actions');
@@ -275,6 +276,8 @@ module.exports = React.createClass({
       allSignalsAreCorrect: Store.allSignalsAreCorrect(),
       triggerValues: Store.getTriggerValues(),
       feedbackTriggers: Store.getFeedbackTriggers(),
+      firstChainFeedback: Store.getFirstChainFeedback(),
+      secondChainFeedback: Store.getSecondChainFeedback(),
       texts: MainStore.getTexts()
     };
   },
@@ -303,6 +306,18 @@ module.exports = React.createClass({
   initSequence: function() {
     actions.initSequence();
   },
+  renderPolynomialElement: function(trigger, index) {
+    console.log(trigger, index);
+    var element = React.createElement("b", null, "X", React.createElement("sup", null, trigger));
+    if (index === 0) {
+      return element;
+    } else {
+      return React.createElement("span", null, " +  ", element);
+    }
+  },
+  renderBirthPolynomial: function(feedbackTriggers) {
+    return (React.createElement("div", {className: "polynominal"}, _.map(feedbackTriggers, this.renderPolynomialElement)));
+  },
   render: function() {
     var self = this;
     var classes = classNames('sequence-wrapper', {'m-sequence': self.state.isMSequence});
@@ -319,12 +334,14 @@ module.exports = React.createClass({
         signalCorrectnessArray = $__0.signalCorrectnessArray,
         triggerValues = $__0.triggerValues,
         feedbackTriggers = $__0.feedbackTriggers,
-        texts = $__0.texts;
+        texts = $__0.texts,
+        firstChainFeedback = $__0.firstChainFeedback,
+        secondChainFeedback = $__0.secondChainFeedback;
     return (React.createElement("div", {className: "sequence-guessing-container"}, React.createElement("h2", null, texts.sequenceGuessing.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.sequenceGuessing.introPart}}), React.createElement(LinearGraph, {
       data: signal,
       width: 800,
       height: 300
-    }), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.commonChannelCaption), React.createElement(TriggerChain, {
+    }), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.commonChannelCaption), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.firstSequencePolynomial), this.renderBirthPolynomial(firstChainFeedback), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.secondSequencePolynomial), this.renderBirthPolynomial(secondChainFeedback), React.createElement(TriggerChain, {
       chainLength: triggerChainLength,
       step: step,
       maxStep: maxStep,
@@ -355,7 +372,7 @@ module.exports = React.createClass({
 
 
 //# sourceURL=/Users/asavchenko/projects/correlation-model/app/pages/sequence-guessing/sequence-guessing-view.js
-},{"../../actions/guessing-actions":3,"../../stores/guessing-store":21,"../../stores/main-store":22,"../../ui-components/button/button-view":23,"../../ui-components/input-section/input-section-view":25,"../../ui-components/linear-graph/linear-graph-view":27,"../../ui-components/trigger-chain/trigger-chain-view":29,"../../utils":31,"classnames":33,"react":256}],11:[function(require,module,exports){
+},{"../../actions/guessing-actions":3,"../../stores/guessing-store":21,"../../stores/main-store":22,"../../ui-components/button/button-view":23,"../../ui-components/input-section/input-section-view":25,"../../ui-components/linear-graph/linear-graph-view":27,"../../ui-components/trigger-chain/trigger-chain-view":29,"../../utils":31,"classnames":33,"lodash":40,"react":256}],11:[function(require,module,exports){
 "use strict";
 var React = require('react');
 var Store = require('../../stores/cdma-store');
@@ -1302,6 +1319,8 @@ module.exports = (function() {
   mixedSignal = signalHelpers.addSignals([signalHelpers.transformBinaryData(signalHelpers.mixSignalWithMSequence(firstRandomSignal, firstRefSequence)), signalHelpers.transformBinaryData(signalHelpers.mixSignalWithMSequence(secondRandomSignal, secondRefSequence))]);
   return flux.createStore({
     triggerChain: firstRandomChain,
+    firstChainFeedback: firstRandomChain[1],
+    secondChainFeedback: secondRandomChain[1],
     maxStep: Math.pow(2, firstRandomChain[0]) - 1,
     step: 0,
     sequence: [],
@@ -1422,6 +1441,12 @@ module.exports = (function() {
         return _.reduce(this.signalCorrectnessArray, function(acc, correct) {
           return acc && correct;
         }, true);
+      },
+      getFirstChainFeedback: function() {
+        return this.firstChainFeedback;
+      },
+      getSecondChainFeedback: function() {
+        return this.secondChainFeedback;
       }
     }
   });
