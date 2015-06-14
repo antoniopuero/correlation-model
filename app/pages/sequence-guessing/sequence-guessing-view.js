@@ -92,7 +92,7 @@ module.exports = React.createClass({
         <h2>{texts.sequenceGuessing.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.sequenceGuessing.introPart}}></p>
 
-        <LinearGraph data={signal} width={800} height={300}/>
+        <LinearGraph data={signal} width={800} height={300} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.sequenceGuessing.commonChannelCaption}</p>
 
         <p className="text-center">{texts.sequenceGuessing.firstSequencePolynomial}</p>
@@ -106,7 +106,7 @@ module.exports = React.createClass({
         <pre className={classes}>{sequence.join('')}</pre>
         <Button name={texts.sequenceGuessing.sequenceInitButton} handler={this.initSequence}/>
 
-        <LinearGraph data={correlation} xOffset={50} width={800} height={300}/>
+        <LinearGraph data={correlation} xOffset={50} width={800} height={300} xAxisTitle={'t, c'}/>
 
         <p dangerouslySetInnerHTML={{__html: texts.sequenceGuessing.inputSignals}}></p>
 

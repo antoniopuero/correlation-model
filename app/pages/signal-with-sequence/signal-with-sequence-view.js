@@ -54,7 +54,7 @@ module.exports = React.createClass({
       <div className="signal-with-sequence-container">
         <h2>{texts.signalWithSequence.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.introPart}}></p>
-        <LinearGraph data={signal} width={800} height={300} withoutBrush={true} emulateBars={true}/>
+        <LinearGraph data={signal} width={800} height={300} withoutBrush={true} emulateBars={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalWithSequence.signalCapture}</p>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutPRNCode}}></p>
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={'static'} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers} uneditable={true}/>
@@ -62,13 +62,13 @@ module.exports = React.createClass({
         <Button name={texts.signalWithSequence.nextStep} handler={this.proceedChain}/>
 
         <pre>{sequence.join('')}</pre>
-        <LinearGraph data={sequence} width={800} height={300} emulateBars={true}/>
+        <LinearGraph data={sequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalWithSequence.PRNCapture}</p>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}></p>
-        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true}/>
+        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalWithSequence.signalWithSequenceCapture}</p>
 
-        <LinearGraph data={spreadSignalSpectrum} width={800} height={300}emulateBars={true}/>
+        <LinearGraph data={spreadSignalSpectrum} width={800} height={300}emulateBars={true} xAxisTitle={'w, Гц'}/>
         <p className="text-center">{texts.signalWithSequence.signalWithSequenceSpectrumCapture}</p>
 
         <PrincipalSchema highlighted={['data-generator', 'prn-generator', 'xor']}/>

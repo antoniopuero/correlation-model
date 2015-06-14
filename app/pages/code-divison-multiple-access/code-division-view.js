@@ -57,15 +57,19 @@ module.exports = React.createClass({
                        onAfterChange={this.changeNoiseAmplitude} withBars/>
         </div>
 
-        <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400}/>
+        <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400} xAxisTitle={'t, c'}/>
 
         <p className="text-center">{texts.CDMA.signalWithNoiseInCommonChannelCaption}</p>
 
-        <LinearGraph data={firstSignalCorrelationClear} width={800} height={400}/>
-        <LinearGraph data={firstSignalCorrelationSpectrum} width={800} height={400}/>
+        <LinearGraph data={firstSignalCorrelationClear} width={800} height={400}  xAxisTitle={'t, c'}/>
 
-        <LinearGraph data={firstSignalCorrelation} width={800} height={400}/>
-        <LinearGraph data={firstSignalCorrelationMultipliedWithCarrierSpectrum} width={800} height={400}/>
+        <p className="text-center">a)</p>
+        <LinearGraph data={firstSignalCorrelationSpectrum} width={800} height={400} xAxisTitle={'w, Гц'}/>
+        <p className="text-center">b)</p>
+        <LinearGraph data={firstSignalCorrelation} width={800} height={400} xAxisTitle={'t, c'}/>
+        <p className="text-center">c)</p>
+        <LinearGraph data={firstSignalCorrelationMultipliedWithCarrierSpectrum} width={800} height={400} xAxisTitle={'w, Гц'}/>
+        <p className="text-center">d)</p>
 
         <p className="text-center">{texts.CDMA.firstSignalCorrelationCapture}</p>
       </div>

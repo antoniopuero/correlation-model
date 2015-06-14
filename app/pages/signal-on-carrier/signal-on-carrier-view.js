@@ -41,20 +41,20 @@ module.exports = React.createClass({
         <h2>{texts.signalOnCarrier.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.introPart}}></p>
 
-        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true}/>
+        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalOnCarrier.signalWithSequenceCapture}</p>
 
         <PrincipalSchema highlighted={['carrier-generator', 'multiply', 'xor']}/>
         <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.aboutCarrying}}></p>
 
 
-        <LinearGraph data={transformedSignal} width={800} height={300} emulateBars={true}/>
+        <LinearGraph data={transformedSignal} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalOnCarrier.transformedSignalCaption}</p>
 
 
-        <LinearGraph data={carrier} width={800} height={300} withoutBrush={true}/>
+        <LinearGraph data={carrier} width={800} height={300} withoutBrush={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalOnCarrier.carrierCaption}</p>
-        <LinearGraph data={signalOnCarrier} width={800} height={400}/>
+        <LinearGraph data={signalOnCarrier} width={800} height={400} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalOnCarrier.signalOnCarrierCapture}</p>
       </div>
     );

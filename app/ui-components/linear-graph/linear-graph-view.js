@@ -8,7 +8,7 @@ module.exports = React.createClass({
 
   getInitialState: function () {
 
-    var {data, width, height, xOffset, emulateBars} = this.props;
+    var {data, width, height, xOffset, emulateBars, xAxisTitle} = this.props;
 
     xOffset = xOffset ? xOffset : 0;
 
@@ -50,6 +50,7 @@ module.exports = React.createClass({
 
     return {
       graphData: graphData,
+      xAxisTitle: xAxisTitle,
       dataSetLength: yValues.length,
       width: width,
       height: height,
@@ -139,7 +140,7 @@ module.exports = React.createClass({
             margin={{top: 10, bottom: 50, left: 50, right: 20}}
             xScale={this.state.xScale}
             yScale={this.state.yScale}
-            xAxis={{label: "t, c"}}
+            xAxis={{label: this.state.xAxisTitle}}
             />
 
           <div className={classes} style={{float: 'none'}}>

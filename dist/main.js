@@ -116,24 +116,29 @@ module.exports = React.createClass({
     })), React.createElement(LinearGraph, {
       data: commonChannelSignalWithNoise,
       width: 800,
-      height: 400
+      height: 400,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.CDMA.signalWithNoiseInCommonChannelCaption), React.createElement(LinearGraph, {
       data: firstSignalCorrelationClear,
       width: 800,
-      height: 400
-    }), React.createElement(LinearGraph, {
+      height: 400,
+      xAxisTitle: 't, c'
+    }), React.createElement("p", {className: "text-center"}, "a)"), React.createElement(LinearGraph, {
       data: firstSignalCorrelationSpectrum,
       width: 800,
-      height: 400
-    }), React.createElement(LinearGraph, {
+      height: 400,
+      xAxisTitle: 'w, Гц'
+    }), React.createElement("p", {className: "text-center"}, "b)"), React.createElement(LinearGraph, {
       data: firstSignalCorrelation,
       width: 800,
-      height: 400
-    }), React.createElement(LinearGraph, {
+      height: 400,
+      xAxisTitle: 't, c'
+    }), React.createElement("p", {className: "text-center"}, "c)"), React.createElement(LinearGraph, {
       data: firstSignalCorrelationMultipliedWithCarrierSpectrum,
       width: 800,
-      height: 400
-    }), React.createElement("p", {className: "text-center"}, texts.CDMA.firstSignalCorrelationCapture)));
+      height: 400,
+      xAxisTitle: 'w, Гц'
+    }), React.createElement("p", {className: "text-center"}, "d)"), React.createElement("p", {className: "text-center"}, texts.CDMA.firstSignalCorrelationCapture)));
   }
 });
 
@@ -177,8 +182,9 @@ module.exports = React.createClass({
     return (React.createElement("div", {className: "common-channel-with-noise-container"}, React.createElement("h2", null, texts.commonChannelWithNoise.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.commonChannelWithNoise.introPart}}), React.createElement(LinearGraph, {
       data: commonChannelSignal,
       width: 800,
-      height: 400
-    }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalInCommonChannelCaption), React.createElement(LinearGraph, {
+      height: 400,
+      xAxisTitle: 't, c'
+    }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalInCommonChannelCaption, " xAxisTitle=", 't, c'), React.createElement(LinearGraph, {
       data: commonChannelSignalWithNoise,
       width: 800,
       height: 400
@@ -230,15 +236,18 @@ module.exports = React.createClass({
     return (React.createElement("div", {className: "common-channel-container"}, React.createElement("h2", null, texts.commonChannel.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.commonChannel.introPart}}), React.createElement(LinearGraph, {
       data: firstSignalOnCarrier,
       width: 800,
-      height: 300
+      height: 300,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.commonChannel.firstSignalOnCarrierCapture), React.createElement(LinearGraph, {
       data: secondSignalOnCarrier,
       width: 800,
-      height: 300
+      height: 300,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.commonChannel.secondSignalOnCarrierCapture), React.createElement(LinearGraph, {
       data: commonChannelSignal,
       width: 800,
-      height: 400
+      height: 400,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.commonChannel.signalInCommonChannelCaption)));
   }
 });
@@ -340,7 +349,8 @@ module.exports = React.createClass({
     return (React.createElement("div", {className: "sequence-guessing-container"}, React.createElement("h2", null, texts.sequenceGuessing.heading), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.sequenceGuessing.introPart}}), React.createElement(LinearGraph, {
       data: signal,
       width: 800,
-      height: 300
+      height: 300,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.commonChannelCaption), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.firstSequencePolynomial), this.renderBirthPolynomial(firstChainFeedback), React.createElement("p", {className: "text-center"}, texts.sequenceGuessing.secondSequencePolynomial), this.renderBirthPolynomial(secondChainFeedback), React.createElement(TriggerChain, {
       chainLength: triggerChainLength,
       step: step,
@@ -355,7 +365,8 @@ module.exports = React.createClass({
       data: correlation,
       xOffset: 50,
       width: 800,
-      height: 300
+      height: 300,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.sequenceGuessing.inputSignals}}), React.createElement(InputSection, {
       userInputSignals: userInputSignals,
       signalCorrectnessArray: signalCorrectnessArray
@@ -418,21 +429,25 @@ module.exports = React.createClass({
       data: signalWithSequence,
       width: 800,
       height: 300,
-      emulateBars: true
+      emulateBars: true,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.signalWithSequenceCapture), React.createElement(PrincipalSchema, {highlighted: ['carrier-generator', 'multiply', 'xor']}), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalOnCarrier.aboutCarrying}}), React.createElement(LinearGraph, {
       data: transformedSignal,
       width: 800,
       height: 300,
-      emulateBars: true
+      emulateBars: true,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.transformedSignalCaption), React.createElement(LinearGraph, {
       data: carrier,
       width: 800,
       height: 300,
-      withoutBrush: true
+      withoutBrush: true,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.carrierCaption), React.createElement(LinearGraph, {
       data: signalOnCarrier,
       width: 800,
-      height: 400
+      height: 400,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.signalOnCarrierCapture)));
   }
 });
@@ -504,7 +519,8 @@ module.exports = React.createClass({
       width: 800,
       height: 300,
       withoutBrush: true,
-      emulateBars: true
+      emulateBars: true,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutPRNCode}}), React.createElement(TriggerChain, {
       chainLength: triggerChainLength,
       step: step,
@@ -520,17 +536,20 @@ module.exports = React.createClass({
       data: sequence,
       width: 800,
       height: 300,
-      emulateBars: true
+      emulateBars: true,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.PRNCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}), React.createElement(LinearGraph, {
       data: signalWithSequence,
       width: 800,
       height: 300,
-      emulateBars: true
+      emulateBars: true,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalWithSequenceCapture), React.createElement(LinearGraph, {
       data: spreadSignalSpectrum,
       width: 800,
       height: 300,
-      emulateBars: true
+      emulateBars: true,
+      xAxisTitle: 'w, Гц'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalWithSequenceSpectrumCapture), React.createElement(PrincipalSchema, {highlighted: ['data-generator', 'prn-generator', 'xor']}), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.principalSchemaCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutPrincipalSchema}})));
   }
 });
@@ -1605,7 +1624,8 @@ module.exports = React.createClass({
         width = $__1.width,
         height = $__1.height,
         xOffset = $__1.xOffset,
-        emulateBars = $__1.emulateBars;
+        emulateBars = $__1.emulateBars,
+        xAxisTitle = $__1.xAxisTitle;
     xOffset = xOffset ? xOffset : 0;
     var graphData = {};
     if (_.isArray(data)) {
@@ -1639,6 +1659,7 @@ module.exports = React.createClass({
     var maxX = Math.max.apply(Math, xValues);
     return {
       graphData: graphData,
+      xAxisTitle: xAxisTitle,
       dataSetLength: yValues.length,
       width: width,
       height: height,
@@ -1718,7 +1739,7 @@ module.exports = React.createClass({
       },
       xScale: this.state.xScale,
       yScale: this.state.yScale,
-      xAxis: {label: "t, c"}
+      xAxis: {label: this.state.xAxisTitle}
     }), React.createElement("div", {
       className: classes,
       style: {float: 'none'}

@@ -38,11 +38,11 @@ module.exports = React.createClass({
       <div className="common-channel-container">
         <h2>{texts.commonChannel.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.commonChannel.introPart}}></p>
-        <LinearGraph data={firstSignalOnCarrier} width={800} height={300}/>
+        <LinearGraph data={firstSignalOnCarrier} width={800} height={300} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.commonChannel.firstSignalOnCarrierCapture}</p>
-        <LinearGraph data={secondSignalOnCarrier} width={800} height={300}/>
+        <LinearGraph data={secondSignalOnCarrier} width={800} height={300} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.commonChannel.secondSignalOnCarrierCapture}</p>
-        <LinearGraph data={commonChannelSignal} width={800} height={400}/>
+        <LinearGraph data={commonChannelSignal} width={800} height={400} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.commonChannel.signalInCommonChannelCaption}</p>
       </div>
     );
