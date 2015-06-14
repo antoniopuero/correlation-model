@@ -1,4 +1,5 @@
 var React = require('react');
+var _ = require('lodash');
 var Store = require('../../stores/guessing-store');
 var MainStore = require('../../stores/main-store');
 var actions = require('../../actions/guessing-actions');
@@ -26,6 +27,8 @@ module.exports = React.createClass({
       allSignalsAreCorrect: Store.allSignalsAreCorrect(),
       triggerValues: Store.getTriggerValues(),
       feedbackTriggers: Store.getFeedbackTriggers(),
+      firstChainFeedback: Store.getFirstChainFeedback(),
+      secondChainFeedback: Store.getSecondChainFeedback(),
       texts: MainStore.getTexts()
     };
   },
@@ -56,6 +59,22 @@ module.exports = React.createClass({
     actions.initSequence();
   },
 
+  renderPolynomialElement: function (trigger, index) {
+    console.log(trigger, index)
+    var element = <b>X<sup>{trigger}</sup></b>;
+    if (index === 0) {
+      return element;
+    } else {
+      return <span> +  {element}</span>
+    }
+  },
+
+  renderBirthPolynomial: function (feedbackTriggers) {
+    return (<div className="polynominal">
+      {_.map(feedbackTriggers, this.renderPolynomialElement)}
+    </div>);
+  },
+
   render: function () {
     var self = this;
     var classes = classNames('sequence-wrapper', {
@@ -66,7 +85,7 @@ module.exports = React.createClass({
       'hidden': !self.state.allSignalsAreCorrect
     });
 
-    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray, triggerValues, feedbackTriggers, texts} = this.state;
+    var {triggerChainLength, step, maxStep, newSequenceId, sequence, correlation, signal, userInputSignals, signalCorrectnessArray, triggerValues, feedbackTriggers, texts, firstChainFeedback, secondChainFeedback} = this.state;
 
     return (
       <div className="sequence-guessing-container">
@@ -75,6 +94,13 @@ module.exports = React.createClass({
 
         <LinearGraph data={signal} width={800} height={300}/>
         <p className="text-center">{texts.sequenceGuessing.commonChannelCaption}</p>
+
+        <p className="text-center">{texts.sequenceGuessing.firstSequencePolynomial}</p>
+
+        {this.renderBirthPolynomial(firstChainFeedback)}
+
+        <p className="text-center">{texts.sequenceGuessing.secondSequencePolynomial}</p>
+        {this.renderBirthPolynomial(secondChainFeedback)}
 
         <TriggerChain chainLength={triggerChainLength} step={step} maxStep={maxStep} newSequenceId={newSequenceId} triggerValues={triggerValues} feedbackTriggers={feedbackTriggers}/>
         <pre className={classes}>{sequence.join('')}</pre>

@@ -95,6 +95,9 @@ body {
   background: green;
   color: #cccccc;
 }
+.polynominal {
+  text-align: center;
+}
 
 
 .signal-with-sequence-container .trigger-chain-wrapper .feedback-line {

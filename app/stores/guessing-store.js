@@ -42,6 +42,8 @@ module.exports = (function () {
 
   return flux.createStore({
     triggerChain: firstRandomChain,
+    firstChainFeedback: firstRandomChain[1],
+    secondChainFeedback: secondRandomChain[1],
     maxStep: Math.pow(2, firstRandomChain[0]) - 1,
     step: 0,
     sequence: [],
@@ -184,6 +186,12 @@ module.exports = (function () {
         return _.reduce(this.signalCorrectnessArray, function (acc, correct) {
           return acc && correct;
         }, true);
+      },
+      getFirstChainFeedback: function () {
+        return this.firstChainFeedback;
+      },
+      getSecondChainFeedback: function () {
+        return this.secondChainFeedback;
       }
     }
   });
