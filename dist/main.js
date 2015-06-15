@@ -184,10 +184,11 @@ module.exports = React.createClass({
       width: 800,
       height: 400,
       xAxisTitle: 't, c'
-    }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalInCommonChannelCaption, " xAxisTitle=", 't, c'), React.createElement(LinearGraph, {
+    }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalInCommonChannelCaption), React.createElement(LinearGraph, {
       data: commonChannelSignalWithNoise,
       width: 800,
-      height: 400
+      height: 400,
+      xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalWithNoiseInCommonChannelCaption)));
   }
 });
