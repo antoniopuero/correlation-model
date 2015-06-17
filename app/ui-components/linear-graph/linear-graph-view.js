@@ -79,7 +79,7 @@ module.exports = React.createClass({
 
       if (emulateBars) {
 
-        graphData.values = _.map(_.range(data.length * 10), function (index) {
+        graphData.values = _.map(_.range(data.length * 20), function (index) {
           return {x: index/ (20 * divide), y: data[Math.floor(index/20)]};
         });
 
