@@ -41,7 +41,7 @@
     "react-slider": "^0.4.2"
   },
   "vendorStyles": [
-    "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+    "./node_modules/bootstrap/dist/css/bootstrap.css"
   ],
   "vendorAssets": [
     {

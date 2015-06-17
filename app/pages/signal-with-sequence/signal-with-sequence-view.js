@@ -65,7 +65,7 @@ module.exports = React.createClass({
         <LinearGraph data={sequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}/>
         <p className="text-center">{texts.signalWithSequence.PRNCapture}</p>
         <p dangerouslySetInnerHTML={{__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}></p>
-        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}/>
+        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'} dividend={signalWithSequence.length / signal.length}/>
         <p className="text-center">{texts.signalWithSequence.signalWithSequenceCapture}</p>
 
         <LinearGraph data={spreadSignalSpectrum} width={800} height={300}emulateBars={true} xAxisTitle={'w, Гц'}/>

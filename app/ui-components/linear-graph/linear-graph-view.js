@@ -8,24 +8,25 @@ module.exports = React.createClass({
 
   getInitialState: function () {
 
-    var {data, width, height, xOffset, emulateBars, xAxisTitle} = this.props;
+    var {data, width, height, xOffset, emulateBars, xAxisTitle, dividend} = this.props;
 
     xOffset = xOffset ? xOffset : 0;
 
     var graphData = {};
+
+    let divide = dividend || 1;
 
     if (_.isArray(data)) {
 
       if (emulateBars) {
 
         graphData.values = _.map(_.range(data.length * 20), function (index) {
-          return {x: index/20, y: data[Math.floor(index/20)]};
+          return {x: index/ (20 * divide), y: data[Math.floor(index/20)]};
         });
 
       } else {
-
         graphData.values = _.map(data, function (value, index) {
-          return {x: index, y: value};
+          return {x: index / divide, y: value};
         });
 
       }
@@ -51,18 +52,18 @@ module.exports = React.createClass({
     return {
       graphData: graphData,
       xAxisTitle: xAxisTitle,
-      dataSetLength: yValues.length,
+      dataSetLength: maxX,
       width: width,
       height: height,
       yScale: d3.scale.linear().domain([minY - 0.1, maxY  + 0.1]).range([height - 70, 0]),
-      xScale: d3.scale.linear().domain([minX - 1, maxX + 1]).range([0, width - 70]),
+      xScale: d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70]),
       xScaleBrush: d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70])
     };
   },
 
   componentWillReceiveProps: function (nextProps) {
 
-    var {data, width, height, xOffset, emulateBars} = nextProps;
+    var {data, width, height, xOffset, emulateBars, dividend} = nextProps;
 
     xOffset = xOffset ? xOffset : 0;
 
@@ -72,18 +73,20 @@ module.exports = React.createClass({
 
     var graphData = {};
 
+    let divide = dividend || 1;
+
     if (_.isArray(data)) {
 
       if (emulateBars) {
 
         graphData.values = _.map(_.range(data.length * 10), function (index) {
-          return {x: index/10, y: data[Math.floor(index/10)]};
+          return {x: index/ (20 * divide), y: data[Math.floor(index/20)]};
         });
 
       } else {
 
         graphData.values = _.map(data, function (value, index) {
-          return {x: index, y: value};
+          return {x: index / divide, y: value};
         });
 
       }
@@ -106,14 +109,14 @@ module.exports = React.createClass({
     var minX = Math.min.apply(Math, xValues);
     var maxX = Math.max.apply(Math, xValues);
 
-    var xScaleDomain = !_.isEmpty(this.previousExtent) ? this.previousExtent : [minX - 1, maxX + 1];
+    var xScaleDomain = !_.isEmpty(this.previousExtent) ? this.previousExtent : [minX - 0.1, maxX + 0.1];
     var xScale = d3.scale.linear().domain(xScaleDomain).range([0, width - 70]);
     var xScaleBrush = d3.scale.linear().domain([minX - 0.1, maxX + 0.1]).range([0, width - 70]);
     var yScale = d3.scale.linear().domain([minY - 0.1, maxY  + 0.1]).range([height - 70, 0]);
 
     this.setState({
       graphData: graphData,
-      dataSetLength: yValues.length - 1,
+      dataSetLength: maxX,
       yScale: yScale,
       xScale: xScale,
       xScaleBrush: xScaleBrush
@@ -149,7 +152,7 @@ module.exports = React.createClass({
               height={50}
               margin={{top: 0, bottom: 30, left: 50, right: 20}}
               xScale={this.state.xScaleBrush}
-              extent={[0, Math.floor(this.state.dataSetLength / 50)]}
+              extent={[0, this.state.dataSetLength]}
               onChange={this._onChange}
               />
           </div>
