@@ -46,12 +46,13 @@ module.exports = React.createClass({
     return (
       <div className="trigger-chain-wrapper">
         <span className="feedback-line"></span>
+        <span className="feedback-arrow"></span>
         <div className="row trigger-chain">
           {_.map(this.state.triggerValues, this.renderTrigger)}
         </div>
         <span className="line-out"></span>
+        <span className="arrow-out"></span>
         <div className="xor-wrapper">
-          <span className="xor">+</span>
           <div className="white-holder"></div>
         </div>
       </div>

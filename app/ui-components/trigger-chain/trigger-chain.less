@@ -14,13 +14,39 @@
     border-bottom: 4px solid black;
   }
 
+
+  .feedback-arrow, .arrow-out {
+    display: inline-block;
+    background-image: url("../assets/arrow.png");
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+  }
+
+  .feedback-arrow {
+    left: 9%;
+    top: 49px;
+  }
+
+  .arrow-out {
+    right: 7%;
+    top: 49px;
+  }
+
+
+
   .line-out {
 
     display: inline-block;
     position: absolute;
     width: 7%;
     border-bottom: 4px solid black;
-    top: 60px;
+    top: 57px;
     right: 8%;
   }
 
@@ -37,20 +63,6 @@
     position: relative;
     border-bottom: 4px solid black;
 
-    .xor {
-      display: inline-block;
-      position: absolute;
-      top: -20px;
-      background: white;
-      width: 40px;
-      height: 40px;
-      border: 4px solid black;
-      border-radius: 20px;
-      font-size: 40px;
-      line-height: 30px;
-      vertical-align: middle;
-      font-weight: bold;
-    }
 
     .white-holder {
       display: inline-block;

@@ -43,7 +43,6 @@ body {
   margin-bottom: 20px !important;
 }
 
-
 .horizontal-slider {
   width: 100%;
   max-width: 500px;
@@ -86,6 +85,7 @@ body {
 }
 
 
+
 .sequence-wrapper {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -113,6 +113,14 @@ body {
 }
 .signal-with-sequence-container .trigger-chain-wrapper .xor-wrapper .white-holder {
   width: 27%;
+}
+.signal-with-sequence-container .trigger-chain-wrapper .feedback-arrow {
+  left: 15%;
+  top: 49px;
+}
+.signal-with-sequence-container .trigger-chain-wrapper .arrow-out {
+  right: 13%;
+  top: 49px;
 }
 .signal-with-sequence-container pre {
   word-break: break-all;
@@ -250,7 +258,34 @@ body {
   height: 100%;
   border-left: 4px solid black;
 }
-.trigger .checkbox.checked .line-through {
+.trigger .checkbox .arrow {
+  display: none;
+  background-image: url("../assets/arrow.png");
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  bottom: 6px;
+  left: 14px;
+}
+.trigger .checkbox .xor {
+  display: none;
+  position: absolute;
+  bottom: -33px;
+  left: 4px;
+  background: white;
+  width: 40px;
+  height: 40px;
+  border: 4px solid black;
+  border-radius: 20px;
+  font-size: 40px;
+  line-height: 30px;
+  vertical-align: middle;
+  font-weight: bold;
+  z-index: 3;
+}
+.trigger .checkbox.checked .line-through,
+.trigger .checkbox.checked .xor,
+.trigger .checkbox.checked .arrow {
   display: inline-block;
 }
 
@@ -269,12 +304,33 @@ body {
   border-top: 4px solid black;
   border-bottom: 4px solid black;
 }
+.trigger-chain-wrapper .feedback-arrow,
+.trigger-chain-wrapper .arrow-out {
+  display: inline-block;
+  background-image: url("../assets/arrow.png");
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+.trigger-chain-wrapper .feedback-arrow {
+  left: 9%;
+  top: 49px;
+}
+.trigger-chain-wrapper .arrow-out {
+  right: 7%;
+  top: 49px;
+}
 .trigger-chain-wrapper .line-out {
   display: inline-block;
   position: absolute;
   width: 7%;
   border-bottom: 4px solid black;
-  top: 60px;
+  top: 57px;
   right: 8%;
 }
 .trigger-chain-wrapper .trigger-chain {
@@ -288,20 +344,6 @@ body {
   width: 83%;
   position: relative;
   border-bottom: 4px solid black;
-}
-.trigger-chain-wrapper .xor-wrapper .xor {
-  display: inline-block;
-  position: absolute;
-  top: -20px;
-  background: white;
-  width: 40px;
-  height: 40px;
-  border: 4px solid black;
-  border-radius: 20px;
-  font-size: 40px;
-  line-height: 30px;
-  vertical-align: middle;
-  font-weight: bold;
 }
 .trigger-chain-wrapper .xor-wrapper .white-holder {
   display: inline-block;

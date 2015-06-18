@@ -16,6 +16,8 @@ module.exports = React.createClass({
           <input type="checkbox" onChange={handler} checked={checked}/>{name}
         </label>
         <span className="line-through"></span>
+        <span className="arrow"></span>
+        <span className="xor">+</span>
       </div>
     );
   }

@@ -118,29 +118,34 @@ module.exports = React.createClass({
       width: 800,
       height: 400,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: commonChannelSignalWithNoise.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.CDMA.signalWithNoiseInCommonChannelCaption), React.createElement(LinearGraph, {
       data: firstSignalCorrelationClear,
       width: 800,
       height: 400,
-      xAxisTitle: 't, c',
+      xAxisTitle: 'n',
+      yAxisTitle: 'A',
       dividend: firstSignalCorrelationClear.length / 5
     }), React.createElement("p", {className: "text-center"}, "a)"), React.createElement(LinearGraph, {
       data: firstSignalCorrelationSpectrum,
       width: 800,
       height: 400,
-      xAxisTitle: 'w, Гц'
+      xAxisTitle: 'f, Гц',
+      yAxisTitle: 'A'
     }), React.createElement("p", {className: "text-center"}, "b)"), React.createElement(LinearGraph, {
       data: firstSignalCorrelation,
       width: 800,
       height: 400,
-      xAxisTitle: 't, c',
+      xAxisTitle: 'n',
+      yAxisTitle: 'A',
       dividend: firstSignalCorrelation.length / 5
     }), React.createElement("p", {className: "text-center"}, "c)"), React.createElement(LinearGraph, {
       data: firstSignalCorrelationMultipliedWithCarrierSpectrum,
       width: 800,
       height: 400,
-      xAxisTitle: 'w, Гц'
+      xAxisTitle: 'f, Гц',
+      yAxisTitle: 'A'
     }), React.createElement("p", {className: "text-center"}, "d)"), React.createElement("p", {className: "text-center"}, texts.CDMA.firstSignalCorrelationCapture)));
   }
 });
@@ -187,12 +192,14 @@ module.exports = React.createClass({
       width: 800,
       height: 400,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: commonChannelSignal.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalInCommonChannelCaption), React.createElement(LinearGraph, {
       data: commonChannelSignalWithNoise,
       width: 800,
       height: 400,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: commonChannelSignalWithNoise.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.commonChannelWithNoise.signalWithNoiseInCommonChannelCaption)));
   }
@@ -244,18 +251,21 @@ module.exports = React.createClass({
       width: 800,
       height: 300,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: firstSignalOnCarrier.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.commonChannel.firstSignalOnCarrierCapture), React.createElement(LinearGraph, {
       data: secondSignalOnCarrier,
       width: 800,
       height: 300,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: secondSignalOnCarrier.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.commonChannel.secondSignalOnCarrierCapture), React.createElement(LinearGraph, {
       data: commonChannelSignal,
       width: 800,
       height: 400,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: commonChannelSignal.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.commonChannel.signalInCommonChannelCaption)));
   }
@@ -376,7 +386,8 @@ module.exports = React.createClass({
       xOffset: 50,
       width: 800,
       height: 300,
-      xAxisTitle: 't, c',
+      xAxisTitle: 'n',
+      yAxisTitle: 'A',
       dividend: correlation.length / 5
     }), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.sequenceGuessing.inputSignals}}), React.createElement(InputSection, {
       userInputSignals: userInputSignals,
@@ -441,6 +452,7 @@ module.exports = React.createClass({
       width: 800,
       height: 300,
       emulateBars: true,
+      emulateBinary: true,
       xAxisTitle: 't, c',
       dividend: signalWithSequence.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.signalWithSequenceCapture), React.createElement(PrincipalSchema, {highlighted: ['carrier-generator', 'multiply', 'xor']}), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalOnCarrier.aboutCarrying}}), React.createElement(LinearGraph, {
@@ -449,18 +461,22 @@ module.exports = React.createClass({
       height: 300,
       emulateBars: true,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: signalWithSequence.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.transformedSignalCaption), React.createElement(LinearGraph, {
       data: carrier,
       width: 800,
       height: 300,
       withoutBrush: true,
-      xAxisTitle: 't, c'
+      xAxisTitle: 't, c',
+      dividend: signalOnCarrier.length / 5,
+      yAxisTitle: 'U, В'
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.carrierCaption), React.createElement(LinearGraph, {
       data: signalOnCarrier,
       width: 800,
       height: 400,
       xAxisTitle: 't, c',
+      yAxisTitle: 'U, В',
       dividend: signalOnCarrier.length / 5
     }), React.createElement("p", {className: "text-center"}, texts.signalOnCarrier.signalOnCarrierCapture)));
   }
@@ -534,6 +550,7 @@ module.exports = React.createClass({
       height: 300,
       withoutBrush: true,
       emulateBars: true,
+      emulateBinary: true,
       xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutPRNCode}}), React.createElement(TriggerChain, {
       chainLength: triggerChainLength,
@@ -551,12 +568,14 @@ module.exports = React.createClass({
       width: 800,
       height: 300,
       emulateBars: true,
+      emulateBinary: true,
       xAxisTitle: 't, c'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.PRNCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutMixingSignalWithPRN}}), React.createElement(LinearGraph, {
       data: signalWithSequence,
       width: 800,
       height: 300,
       emulateBars: true,
+      emulateBinary: true,
       xAxisTitle: 't, c',
       dividend: signalWithSequence.length / signal.length
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalWithSequenceCapture), React.createElement(LinearGraph, {
@@ -564,7 +583,8 @@ module.exports = React.createClass({
       width: 800,
       height: 300,
       emulateBars: true,
-      xAxisTitle: 'w, Гц'
+      xAxisTitle: 'f, Гц',
+      yAxisTitle: 'A'
     }), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.signalWithSequenceSpectrumCapture), React.createElement(PrincipalSchema, {highlighted: ['data-generator', 'prn-generator', 'xor']}), React.createElement("p", {className: "text-center"}, texts.signalWithSequence.principalSchemaCapture), React.createElement("p", {dangerouslySetInnerHTML: {__html: texts.signalWithSequence.aboutPrincipalSchema}})));
   }
 });
@@ -1640,8 +1660,15 @@ module.exports = React.createClass({
         height = $__1.height,
         xOffset = $__1.xOffset,
         emulateBars = $__1.emulateBars,
+        emulateBinary = $__1.emulateBinary,
         xAxisTitle = $__1.xAxisTitle,
+        yAxisTitle = $__1.yAxisTitle,
         dividend = $__1.dividend;
+    var yAxis = {label: yAxisTitle};
+    if (emulateBinary) {
+      yAxis.tickFormat = d3.format('.0f');
+      yAxis.tickValues = [0, 1];
+    }
     xOffset = xOffset ? xOffset : 0;
     var graphData = {};
     var divide = dividend || 1;
@@ -1677,6 +1704,7 @@ module.exports = React.createClass({
     return {
       graphData: graphData,
       xAxisTitle: xAxisTitle,
+      yAxis: yAxis,
       dataSetLength: maxX,
       width: width,
       height: height,
@@ -1758,7 +1786,8 @@ module.exports = React.createClass({
       },
       xScale: this.state.xScale,
       yScale: this.state.yScale,
-      xAxis: {label: this.state.xAxisTitle}
+      xAxis: {label: this.state.xAxisTitle},
+      yAxis: this.state.yAxis
     }), React.createElement("div", {
       className: classes,
       style: {float: 'none'}
