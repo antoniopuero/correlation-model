@@ -1572,7 +1572,7 @@ module.exports = React.createClass({
       type: "checkbox",
       onChange: handler,
       checked: checked
-    }), name), React.createElement("span", {className: "line-through"})));
+    }), name), React.createElement("span", {className: "line-through"}), React.createElement("span", {className: "arrow"}), React.createElement("span", {className: "xor"}, "+")));
   }
 });
 
@@ -1880,7 +1880,7 @@ module.exports = React.createClass({
     }));
   },
   render: function() {
-    return (React.createElement("div", {className: "trigger-chain-wrapper"}, React.createElement("span", {className: "feedback-line"}), React.createElement("div", {className: "row trigger-chain"}, _.map(this.state.triggerValues, this.renderTrigger)), React.createElement("span", {className: "line-out"}), React.createElement("div", {className: "xor-wrapper"}, React.createElement("span", {className: "xor"}, "+"), React.createElement("div", {className: "white-holder"}))));
+    return (React.createElement("div", {className: "trigger-chain-wrapper"}, React.createElement("span", {className: "feedback-line"}), React.createElement("span", {className: "feedback-arrow"}), React.createElement("div", {className: "row trigger-chain"}, _.map(this.state.triggerValues, this.renderTrigger)), React.createElement("span", {className: "line-out"}), React.createElement("span", {className: "arrow-out"}), React.createElement("div", {className: "xor-wrapper"}, React.createElement("div", {className: "white-holder"}))));
   }
 });
 
