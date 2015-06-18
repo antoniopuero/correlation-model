@@ -106,7 +106,7 @@ module.exports = React.createClass({
         <pre className={classes}>{sequence.join('')}</pre>
         <Button name={texts.sequenceGuessing.sequenceInitButton} handler={this.initSequence}/>
 
-        <LinearGraph data={correlation} xOffset={50} width={800} height={300} xAxisTitle={'t, c'} dividend={correlation.length/5}/>
+        <LinearGraph data={correlation} xOffset={50} width={800} height={300} xAxisTitle={'n'} yAxisTitle={'A'} dividend={correlation.length/5}/>
 
         <p dangerouslySetInnerHTML={{__html: texts.sequenceGuessing.inputSignals}}></p>
 

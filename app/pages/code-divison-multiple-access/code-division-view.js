@@ -57,18 +57,18 @@ module.exports = React.createClass({
                        onAfterChange={this.changeNoiseAmplitude} withBars/>
         </div>
 
-        <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400} xAxisTitle={'t, c'} dividend={commonChannelSignalWithNoise.length / 5}/>
+        <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400} xAxisTitle={'t, c'} yAxisTitle={'U, В'} dividend={commonChannelSignalWithNoise.length / 5}/>
 
         <p className="text-center">{texts.CDMA.signalWithNoiseInCommonChannelCaption}</p>
 
-        <LinearGraph data={firstSignalCorrelationClear} width={800} height={400}  xAxisTitle={'t, c'} dividend={firstSignalCorrelationClear.length / 5}/>
+        <LinearGraph data={firstSignalCorrelationClear} width={800} height={400}  xAxisTitle={'n'} yAxisTitle={'A'} dividend={firstSignalCorrelationClear.length / 5}/>
 
         <p className="text-center">a)</p>
-        <LinearGraph data={firstSignalCorrelationSpectrum} width={800} height={400} xAxisTitle={'w, Гц'}/>
+        <LinearGraph data={firstSignalCorrelationSpectrum} width={800} height={400} xAxisTitle={'f, Гц'} yAxisTitle={'A'}/>
         <p className="text-center">b)</p>
-        <LinearGraph data={firstSignalCorrelation} width={800} height={400} xAxisTitle={'t, c'} dividend={firstSignalCorrelation.length / 5}/>
+        <LinearGraph data={firstSignalCorrelation} width={800} height={400} xAxisTitle={'n'} yAxisTitle={'A'} dividend={firstSignalCorrelation.length / 5}/>
         <p className="text-center">c)</p>
-        <LinearGraph data={firstSignalCorrelationMultipliedWithCarrierSpectrum} width={800} height={400} xAxisTitle={'w, Гц'}/>
+        <LinearGraph data={firstSignalCorrelationMultipliedWithCarrierSpectrum} width={800} height={400} xAxisTitle={'f, Гц'} yAxisTitle={'A'}/>
         <p className="text-center">d)</p>
 
         <p className="text-center">{texts.CDMA.firstSignalCorrelationCapture}</p>

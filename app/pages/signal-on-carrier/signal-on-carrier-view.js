@@ -41,20 +41,20 @@ module.exports = React.createClass({
         <h2>{texts.signalOnCarrier.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.introPart}}></p>
 
-        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'}  dividend={signalWithSequence.length / 5}/>
+        <LinearGraph data={signalWithSequence} width={800} height={300} emulateBars={true}  emulateBinary={true} xAxisTitle={'t, c'}  dividend={signalWithSequence.length / 5}/>
         <p className="text-center">{texts.signalOnCarrier.signalWithSequenceCapture}</p>
 
         <PrincipalSchema highlighted={['carrier-generator', 'multiply', 'xor']}/>
         <p dangerouslySetInnerHTML={{__html: texts.signalOnCarrier.aboutCarrying}}></p>
 
 
-        <LinearGraph data={transformedSignal} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'} dividend={signalWithSequence.length / 5}/>
+        <LinearGraph data={transformedSignal} width={800} height={300} emulateBars={true} xAxisTitle={'t, c'} yAxisTitle={'U, В'} dividend={signalWithSequence.length / 5}/>
         <p className="text-center">{texts.signalOnCarrier.transformedSignalCaption}</p>
 
 
-        <LinearGraph data={carrier} width={800} height={300} withoutBrush={true} xAxisTitle={'t, c'}/>
+        <LinearGraph data={carrier} width={800} height={300} withoutBrush={true} xAxisTitle={'t, c'} dividend={signalOnCarrier.length / 5} yAxisTitle={'U, В'}/>
         <p className="text-center">{texts.signalOnCarrier.carrierCaption}</p>
-        <LinearGraph data={signalOnCarrier} width={800} height={400} xAxisTitle={'t, c'} dividend={signalOnCarrier.length / 5}/>
+        <LinearGraph data={signalOnCarrier} width={800} height={400} xAxisTitle={'t, c'}  yAxisTitle={'U, В'} dividend={signalOnCarrier.length / 5}/>
         <p className="text-center">{texts.signalOnCarrier.signalOnCarrierCapture}</p>
       </div>
     );

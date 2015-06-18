@@ -8,7 +8,14 @@ module.exports = React.createClass({
 
   getInitialState: function () {
 
-    var {data, width, height, xOffset, emulateBars, xAxisTitle, dividend} = this.props;
+    var {data, width, height, xOffset, emulateBars, emulateBinary, xAxisTitle, yAxisTitle, dividend} = this.props;
+
+    var yAxis = {label: yAxisTitle};
+
+    if (emulateBinary) {
+      yAxis.tickFormat = d3.format('.0f');
+      yAxis.tickValues = [0, 1];
+    }
 
     xOffset = xOffset ? xOffset : 0;
 
@@ -52,6 +59,7 @@ module.exports = React.createClass({
     return {
       graphData: graphData,
       xAxisTitle: xAxisTitle,
+      yAxis: yAxis,
       dataSetLength: maxX,
       width: width,
       height: height,
@@ -144,6 +152,7 @@ module.exports = React.createClass({
             xScale={this.state.xScale}
             yScale={this.state.yScale}
             xAxis={{label: this.state.xAxisTitle}}
+            yAxis={this.state.yAxis}
             />
 
           <div className={classes} style={{float: 'none'}}>

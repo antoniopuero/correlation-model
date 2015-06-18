@@ -35,9 +35,9 @@ module.exports = React.createClass({
       <div className="common-channel-with-noise-container">
         <h2>{texts.commonChannelWithNoise.heading}</h2>
         <p dangerouslySetInnerHTML={{__html: texts.commonChannelWithNoise.introPart}}></p>
-        <LinearGraph data={commonChannelSignal} width={800} height={400} xAxisTitle={'t, c'} dividend={commonChannelSignal.length / 5}/>
+        <LinearGraph data={commonChannelSignal} width={800} height={400} xAxisTitle={'t, c'} yAxisTitle={'U, В'} dividend={commonChannelSignal.length / 5}/>
         <p className="text-center">{texts.commonChannelWithNoise.signalInCommonChannelCaption}</p>
-        <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400} xAxisTitle={'t, c'} dividend={commonChannelSignalWithNoise.length / 5}/>
+        <LinearGraph data={commonChannelSignalWithNoise} width={800} height={400} xAxisTitle={'t, c'} yAxisTitle={'U, В'} dividend={commonChannelSignalWithNoise.length / 5}/>
         <p className="text-center">{texts.commonChannelWithNoise.signalWithNoiseInCommonChannelCaption}</p>
       </div>
     );
